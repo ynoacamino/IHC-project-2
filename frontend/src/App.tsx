@@ -1,15 +1,15 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import MainMenu from './components/MainMenu';
-import GameOptions from './components/GameOptions';
-import Canvas from './components/Canvas';
-import VideoGames from './components/VideoGames';
-import QuickSession from './components/QuickSession';
-import Settings from './components/Settings';
+import { HashRouter, Routes, Route } from 'react-router-dom';
+import MainMenu from '@/components/page/MainMenu';
+import GameOptions from '@/components/page/GameOptions';
+import Canvas from '@/components/page/Canvas';
+import VideoGames from '@/components/page/VideoGames';
+import QuickSession from '@/components/page/QuickSession';
+import Settings from '@/components/page/Settings';
 
 function App() {
   return (
-    <BrowserRouter>
+    <HashRouter basename="/">
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
         <Routes>
           <Route path="/" element={<MainMenu />} />
@@ -20,7 +20,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
