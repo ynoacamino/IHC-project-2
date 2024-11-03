@@ -34,7 +34,7 @@ const Settings = () => {
               <span>Graphics Quality</span>
             </div>
             <select className="bg-gray-700 text-white rounded-md px-3 py-1">
-              <option>Low</option>
+              <option>Low </option>
               <option>Medium</option>
               <option>High</option>
             </select>
