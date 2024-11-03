@@ -45,13 +45,12 @@ const Canvas = () => {
     const frame = ctx.getImageData(0, 0, width, height);
     const data = frame.data;
     const blackPixels = [];
-    
+
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
 
-      // Detectar color negro: valores de RGB bajos
       if (r < 50 && g < 50 && b < 50) {
         const x = (i / 4) % width;
         const y = Math.floor((i / 4) / width);
@@ -63,7 +62,6 @@ const Canvas = () => {
       const centerX = blackPixels.reduce((sum, pixel) => sum + pixel.x, 0) / blackPixels.length;
       const centerY = blackPixels.reduce((sum, pixel) => sum + pixel.y, 0) / blackPixels.length;
 
-      // Si estamos dibujando, conectamos el punto anterior con el actual
       if (isDrawingRef.current) {
         const drawingCanvas = drawingCanvasRef.current;
         const drawingCtx = drawingCanvas.getContext('2d');
@@ -72,18 +70,16 @@ const Canvas = () => {
         drawingCtx.lineCap = 'round'; // Bordes redondeados
         drawingCtx.strokeStyle = 'red'; // Color del lápiz
 
-        // Dibujar en el canvas de dibujo
         drawingCtx.beginPath();
         drawingCtx.moveTo(lastPositionRef.current.x, lastPositionRef.current.y);
         drawingCtx.lineTo(centerX, centerY);
         drawingCtx.stroke();
       }
 
-      // Dibujar un círculo en el canvas principal
       const canvas = canvasRef.current;
       const ctx = canvas.getContext('2d');
       const area = blackPixels.length;
-      const radius = Math.sqrt(area / Math.PI); // Radio proporcional al área
+      const radius = Math.sqrt(area / Math.PI);
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
@@ -91,12 +87,17 @@ const Canvas = () => {
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Actualiza la última posición
       lastPositionRef.current = { x: centerX, y: centerY };
       isDrawingRef.current = true;
     } else {
       isDrawingRef.current = false; // No hay negro, no dibujamos
     }
+  };
+
+  const clearCanvas = () => {
+    const drawingCanvas = drawingCanvasRef.current;
+    const drawingCtx = drawingCanvas.getContext('2d');
+    drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); // Limpia el canvas de dibujo
   };
 
   return (
@@ -120,13 +121,18 @@ const Canvas = () => {
           >
             Canvas not supported
           </canvas>
-          {/* Canvas para dibujar */}
           <canvas
             ref={drawingCanvasRef}
             className="absolute top-0 left-0 w-full h-full"
             width="1200"
             height="900"
           />
+          {/* Botón para borrar */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <button onClick={clearCanvas} className="bg-red-500 text-white px-4 py-2 rounded">
+              Borrar
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -134,4 +140,3 @@ const Canvas = () => {
 };
 
 export default Canvas;
-
