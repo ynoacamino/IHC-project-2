@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
@@ -9,9 +9,10 @@ const Canvas = () => {
   const drawingCanvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const lastPositionRef = useRef({ x: 0, y: 0 });
-  const streamRef = useRef(null); // Para guardar el flujo de video
-  const intervalRef = useRef(null); // Para guardar el intervalo
-  const clearAreaRef = useRef({ x: 20, y: 20, width: 250, height: 100 }); // Área de borrado
+  const streamRef = useRef(null); 
+  const [brushColor, setBrushColor] = useState('black');
+  const intervalRef = useRef(null); 
+  const clearAreaRef = useRef({ x: 20, y: 20, width: 250, height: 100 }); 
 
   useEffect(() => {
     const setupCamera = async () => {
@@ -19,20 +20,25 @@ const Canvas = () => {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         streamRef.current = stream; // Guardar el flujo
         videoRef.current.srcObject = stream;
-        videoRef.current.play();
 
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext('2d');
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current.play();
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext('2d');
 
-        intervalRef.current = setInterval(() => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          ctx.save();
-          ctx.scale(-1, 1);
-          ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height);
-          ctx.restore();
-          detectColor(ctx, canvas.width, canvas.height);
-          drawClearArea(ctx); // Dibuja el área de borrado
-        }, 100);
+          intervalRef.current = setInterval(() => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.scale(-1, 1);
+            
+            if (videoRef.current && videoRef.current.readyState >= 2) { // Asegúrate de que el video esté listo
+              ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height);
+            }
+            ctx.restore();
+            detectColor(ctx, canvas.width, canvas.height);
+            drawClearArea(ctx); // Dibuja el área de borrado
+          }, 100);
+        };
       } catch (error) {
         console.error('Error accessing camera:', error);
       }
@@ -52,13 +58,10 @@ const Canvas = () => {
 
   const drawClearArea = (ctx) => {
     ctx.save();
-    
-    // Dibuja el área de borrado
     ctx.strokeStyle = 'transparent'; // Color del borde del área de borrado
     const clearArea = clearAreaRef.current;
     ctx.lineWidth = 2;
     ctx.strokeRect(clearArea.x, clearArea.y, clearArea.width + 50, clearArea.height); // Dibuja el rectángulo del área de borrado
-
     ctx.restore();
   };
 
@@ -86,7 +89,6 @@ const Canvas = () => {
       if (isDrawingRef.current) {
         const { x, y, width, height } = clearAreaRef.current;
 
-        // Verifica si el centro colisiona con el área de borrado
         if (
           centerX >= x &&
           centerX <= x + width &&
@@ -100,7 +102,7 @@ const Canvas = () => {
 
           drawingCtx.lineWidth = 5; // Grosor del lápiz
           drawingCtx.lineCap = 'round'; // Bordes redondeados
-          drawingCtx.strokeStyle = 'red'; // Color del lápiz
+          drawingCtx.strokeStyle = brushColor; // Asegúrate de que use el color actualizado
 
           drawingCtx.beginPath();
           drawingCtx.moveTo(lastPositionRef.current.x, lastPositionRef.current.y);
@@ -109,13 +111,12 @@ const Canvas = () => {
         }
       }
 
-      const canvas = canvasRef.current;
       const area = blackPixels.length;
       const radius = Math.sqrt(area / Math.PI);
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'red'; // Color del círculo
+      ctx.strokeStyle = 'black'; // Color del círculo
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -140,7 +141,7 @@ const Canvas = () => {
   return (
     <div className="min-h-screen p-4">
       <button
-        onClick={handleNavigateBack} // Usa la función que limpia el canvas
+        onClick={handleNavigateBack}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
       >
         <ArrowLeft className="h-8 w-8" />
@@ -149,7 +150,6 @@ const Canvas = () => {
       <div className="text-center">
         <h1 className="text-4xl font-bold text-white mb-8">Canvas Mode</h1>
         <div className="bg-white rounded-lg p-4 max-w-4xl mx-auto relative">
-          {/* Video oculto para la captura */}
           <video ref={videoRef} className="hidden" autoPlay playsInline />
           <canvas
             ref={canvasRef}
@@ -165,8 +165,7 @@ const Canvas = () => {
             width="1200"
             height="900"
           />
-          
-          {/* Área de borrado que puedes ajustar manualmente */}
+
           <div
             style={{
               position: 'absolute',
@@ -192,6 +191,14 @@ const Canvas = () => {
               className="bg-red-500 text-white px-16 py-5 rounded text-2xl"
             >
               Borrar
+            </button>
+            <button
+              onClick={() => {
+                setBrushColor('yellow');
+              }} 
+              className="bg-yellow-500 text-white px-14 py-5 rounded text-2xl"
+            >
+              Amarillo
             </button>
           </div>
         </div>
