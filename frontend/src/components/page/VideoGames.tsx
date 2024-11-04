@@ -6,19 +6,21 @@ const VideoGames = () => {
   const navigate = useNavigate();
   const games = [
     {
-      title: "Space Adventure",
-      image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?auto=format&fit=crop&w=300",
-      description: "Explore the vast universe"
-    },
-    {
-      title: "Forest Quest",
+      title: "Canvas",
       image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=300",
       description: "Survive in the mystical forest"
     },
+
     {
-      title: "Ocean Explorer",
-      image: "https://images.unsplash.com/photo-1518019671582-55004f1bc2ad?auto=format&fit=crop&w=300",
-      description: "Discover underwater mysteries"
+      title: "Laberinto",
+      image: "https://img.freepik.com/vector-gratis/patron-laberinto-circular-estilo-3d-fondo-amarillo-encontrar-atajos-ocultos_1017-53803.jpg?t=st=1730690128~exp=1730693728~hmac=1d980057e065acc1c403853f8b2107b49b5262ae687b44fa88a24d476541a54f&w=740",
+      description: "realiza el laberinto sin chocar con las paredes" 
+    },
+
+    {
+      title: "Sigue la pista",
+      image: "https://img.freepik.com/vector-gratis/ilustracion-concepto-preparacion-parto_114360-16571.jpg?t=st=1730690321~exp=1730693921~hmac=47eb0eb6e4e0a4820e6fa037f355c69a58b069d9fa15061934347b0d745800bf&w=740",
+      description: "Realiza las indicaciones"
     }
   ];
 
