@@ -10,6 +10,8 @@ const Canvas = () => {
   const isDrawingRef = useRef(false);
   const lastPositionRef = useRef({ x: 0, y: 0 });
   const streamRef = useRef(null); // Para guardar el flujo de video
+  const intervalRef = useRef(null); // Para guardar el intervalo
+  const clearButtonRef = useRef(null); // Para referencia del botón de borrar
 
   useEffect(() => {
     const setupCamera = async () => {
@@ -22,13 +24,15 @@ const Canvas = () => {
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
 
-        const drawVideo = () => {
-          ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+        // Cambiamos a un intervalo de 100 ms
+        intervalRef.current = setInterval(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpia el canvas antes de dibujar
+          ctx.save(); // Guarda el estado del contexto
+          ctx.scale(-1, 1); // Voltea horizontalmente
+          ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height); // Dibuja el video volteado
+          ctx.restore(); // Restaura el estado del contexto
           detectColor(ctx, canvas.width, canvas.height);
-          requestAnimationFrame(drawVideo);
-        };
-
-        drawVideo();
+        }, 100); // Dibuja cada 100 ms
       } catch (error) {
         console.error('Error accessing camera:', error);
       }
@@ -37,9 +41,12 @@ const Canvas = () => {
     setupCamera();
 
     return () => {
-      // Detener el flujo de video al desmontar el componente
+      // Detener el flujo de video y limpiar el intervalo al desmontar el componente
       if (streamRef.current) {
         streamRef.current.getTracks().forEach(track => track.stop());
+      }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
       }
     };
   }, []);
@@ -65,18 +72,29 @@ const Canvas = () => {
       const centerX = blackPixels.reduce((sum, pixel) => sum + pixel.x, 0) / blackPixels.length;
       const centerY = blackPixels.reduce((sum, pixel) => sum + pixel.y, 0) / blackPixels.length;
 
+      // Verificar si el punto colisiona con el botón de borrar
       if (isDrawingRef.current) {
-        const drawingCanvas = drawingCanvasRef.current;
-        const drawingCtx = drawingCanvas.getContext('2d');
+        const button = clearButtonRef.current.getBoundingClientRect();
+        if (
+          centerX >= button.left &&
+          centerX <= button.right &&
+          centerY >= button.top &&
+          centerY <= button.bottom
+        ) {
+          clearCanvas(); // Borra si colisiona con el botón
+        } else {
+          const drawingCanvas = drawingCanvasRef.current;
+          const drawingCtx = drawingCanvas.getContext('2d');
 
-        drawingCtx.lineWidth = 5; // Grosor del lápiz
-        drawingCtx.lineCap = 'round'; // Bordes redondeados
-        drawingCtx.strokeStyle = 'red'; // Color del lápiz
+          drawingCtx.lineWidth = 5; // Grosor del lápiz
+          drawingCtx.lineCap = 'round'; // Bordes redondeados
+          drawingCtx.strokeStyle = 'red'; // Color del lápiz
 
-        drawingCtx.beginPath();
-        drawingCtx.moveTo(lastPositionRef.current.x, lastPositionRef.current.y);
-        drawingCtx.lineTo(centerX, centerY);
-        drawingCtx.stroke();
+          drawingCtx.beginPath();
+          drawingCtx.moveTo(lastPositionRef.current.x, lastPositionRef.current.y);
+          drawingCtx.lineTo(centerX, centerY);
+          drawingCtx.stroke();
+        }
       }
 
       const canvas = canvasRef.current;
@@ -90,11 +108,31 @@ const Canvas = () => {
       ctx.lineWidth = 2;
       ctx.stroke();
 
+      // Dibuja el área del botón de borrar
+      drawClearButtonArea(ctx); // Dibuja el área del botón de borrar
+
       lastPositionRef.current = { x: centerX, y: centerY };
       isDrawingRef.current = true;
     } else {
       isDrawingRef.current = false; // No hay negro, no dibujamos
     }
+  };
+
+  const drawClearButtonArea = (ctx) => {
+    const button = clearButtonRef.current.getBoundingClientRect();
+    const scaleFactor = window.devicePixelRatio; // Para escalar según la resolución de la pantalla
+
+    // Dibuja un rectángulo alrededor del botón de borrar
+    ctx.strokeStyle = 'blue'; // Color del borde
+    ctx.lineWidth = 2;
+
+    // Dibuja el rectángulo ajustado a la escala
+    ctx.strokeRect(
+      (button.left + window.scrollX) * scaleFactor,
+      (button.top + window.scrollY) * scaleFactor,
+      button.width * scaleFactor,
+      button.height * scaleFactor
+    );
   };
 
   const clearCanvas = () => {
@@ -120,7 +158,8 @@ const Canvas = () => {
       <div className="text-center">
         <h1 className="text-4xl font-bold text-white mb-8">Canvas Mode</h1>
         <div className="bg-white rounded-lg p-4 max-w-4xl mx-auto relative">
-          <video ref={videoRef} className="hidden" />
+          {/* Video oculto para la captura */}
+          <video ref={videoRef} className="hidden" autoPlay playsInline />
           <canvas
             ref={canvasRef}
             className="w-full border-2 border-gray-300 rounded"
@@ -135,9 +174,12 @@ const Canvas = () => {
             width="1200"
             height="900"
           />
-          {/* Botón para borrar */}
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
-            <button onClick={clearCanvas} className="bg-red-500 text-white px-4 py-2 rounded">
+          {/* Botón para borrar con tamaño aumentado */}
+          <div ref={clearButtonRef} className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <button
+              onClick={clearCanvas}
+              className="bg-red-500 text-white px-8 py-4 rounded text-xl" // Botón más grande
+            >
               Borrar
             </button>
           </div>
