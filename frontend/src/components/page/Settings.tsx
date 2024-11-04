@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 const Settings = () => {
   const navigate = useNavigate();
+  const [red, setRed] = useState(0);
+  const [green, setGreen] = useState(0);
+  const [blue, setBlue] = useState(0);
+
+  // Función para manejar los cambios en los sliders
+  const handleRedChange = (event) => setRed(event.target.value);
+  const handleGreenChange = (event) => setGreen(event.target.value);
+  const handleBlueChange = (event) => setBlue(event.target.value);
+
+  // Color resultante basado en los valores RGB
+  const rgbColor = `rgb(${red}, ${green}, ${blue})`;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -16,45 +27,65 @@ const Settings = () => {
         </button>
 
         <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-8">Settings</h1>
+          <h1 className="text-4xl font-bold text-white mb-8">Opciones</h1>
         </div>
 
         <div className="bg-gray-800 rounded-lg p-6 space-y-4">
-          {/* Upper Hue */}
+          {/* Control deslizante para Rojo */}
           <div className="flex items-center justify-between text-white">
-            <span>Upper Hue</span>
-            <input type="range" min="0" max="255" className="w-32" />
+            <span>Rojo</span>
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value={red}
+              onChange={handleRedChange}
+              className="slider w-60"
+            />
+            <span>{red}</span>
           </div>
 
-          {/* Upper Saturation */}
+          {/* Control deslizante para Verde */}
           <div className="flex items-center justify-between text-white">
-            <span>Upper Saturation</span>
-            <input type="range" min="0" max="255" className="w-32" />
+            <span>Verde</span>
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value={green}
+              onChange={handleGreenChange}
+              className="slider w-60"
+            />
+            <span>{green}</span>
           </div>
 
-          {/* Upper Value */}
+          {/* Control deslizante para Azul */}
           <div className="flex items-center justify-between text-white">
-            <span>Upper Value</span>
-            <input type="range" min="0" max="255" className="w-32" />
+            <span>Azul</span>
+            <input
+              type="range"
+              min="0"
+              max="255"
+              value={blue}
+              onChange={handleBlueChange}
+              className="slider w-60"
+            />
+            <span>{blue}</span>
           </div>
 
-          {/* Lower Hue */}
+          {/* Mostrar Color Resultante */}
           <div className="flex items-center justify-between text-white">
-            <span>Lower Hue</span>
-            <input type="range" min="0" max="255" className="w-32" />
+            <span>Color Resultante:</span>
+            <div
+              className="w-16 h-16 border-2 border-gray-500"
+              style={{ backgroundColor: rgbColor }}
+            />
           </div>
 
-          {/* Lower Saturation */}
-          <div className="flex items-center justify-between text-white">
-            <span>Lower Saturation</span>
-            <input type="range" min="0" max="255" className="w-32" />
-          </div>
-
-          {/* Lower Value */}
-          <div className="flex items-center justify-between text-white">
-            <span>Lower Value</span>
-            <input type="range" min="0" max="255" className="w-32" />
-          </div>
+          {/* Botón de Guardar */}
+          <button className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors">
+            Guardar
+          </button>
         </div>
       </div>
     </div>
