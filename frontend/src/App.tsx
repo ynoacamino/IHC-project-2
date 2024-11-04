@@ -5,6 +5,9 @@ import GameOptions from '@/components/page/GameOptions';
 import Canvas from '@/components/page/Canvas';
 import VideoGames from '@/components/page/VideoGames';
 import Rehabilitation from '@/components/page/Rehabilitation';
+import HandSession from './components/page/HandSession';
+import ArmSession from './components/page/ArmSession';
+import FingerSession from './components/page/FingerSession';
 import Settings from '@/components/page/Settings';
 import Maze from './components/page/Maze';
 
@@ -18,8 +21,11 @@ function App() {
           <Route path="/canvas" element={<Canvas />} />
           <Route path="/laberinto" element={<Maze />} />
           <Route path="/videogames" element={<VideoGames />} />
-          <Route path="/rehabilitation" element={<Rehabilitation />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/rehabilitation" element={<Rehabilitation />} />
+          <Route path="/hand-session" element={<HandSession />} />
+          <Route path="/arm-session" element={<ArmSession />} />
+          <Route path="/finger-session" element={<FingerSession />} />
         </Routes>
       </div>
     </HashRouter>
