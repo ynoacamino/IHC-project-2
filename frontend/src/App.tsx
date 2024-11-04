@@ -6,6 +6,7 @@ import Canvas from '@/components/page/Canvas';
 import VideoGames from '@/components/page/VideoGames';
 import QuickSession from '@/components/page/QuickSession';
 import Settings from '@/components/page/Settings';
+import Maze from './components/page/Maze';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/" element={<MainMenu />} />
           <Route path="/game-options" element={<GameOptions />} />
           <Route path="/canvas" element={<Canvas />} />
+          <Route path="/laberinto" element={<Maze />} />
           <Route path="/videogames" element={<VideoGames />} />
           <Route path="/quick-session" element={<QuickSession />} />
           <Route path="/settings" element={<Settings />} />
