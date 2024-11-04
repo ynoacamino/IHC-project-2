@@ -10,25 +10,25 @@ const GameOptions = () => {
     {
       title: "Canvas",
       image: "https://www.haydnsymons.com/wp-content/uploads/2024/01/canvas-art.webp",
-      description: "Diviertete y explora pintando con tus manos",
-      route: "/canvas" // Ruta para navegar al canvas
+      description: "Diviértete y explora pintando con tus manos",
+      route: "/canvas"
     },
     {
       title: "Laberinto",
       image: "https://img.freepik.com/vector-gratis/patron-laberinto-circular-estilo-3d-fondo-amarillo-encontrar-atajos-ocultos_1017-53803.jpg",
       description: "Realiza el laberinto sin chocar con las paredes",
-      route: "/laberinto" // Puedes configurar una ruta específica
+      route: "/laberinto"
     },
     {
       title: "Rehabilitación",
       image: "https://img.freepik.com/vector-gratis/ilustracion-concepto-preparacion-parto_114360-16571.jpg",
       description: "Realiza ejercicios de rehabilitación",
-      route: "/rehabilitation" // Otra ruta específica para este juego
+      route: "/rehabilitation"
     }
   ];
 
   return (
-    <div className="min-h-screen p-4">
+    <div className="h-screen flex flex-col items-center justify-center p-4">
       <button
         onClick={() => navigate('/')}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
@@ -40,7 +40,7 @@ const GameOptions = () => {
         <h1 className="text-4xl font-bold text-white mb-8">Choose Your Adventure</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
         {games.map((game, index) => (
           <div
             key={index}
