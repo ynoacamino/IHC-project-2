@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const HandSession: React.FC = () => {
+const ArmSession: React.FC = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
@@ -37,9 +37,9 @@ const HandSession: React.FC = () => {
             playsInline
             />
             <div className="p-4">
-            <h1 className="text-3xl font-bold text-center mb-4">Sesión de rehabilitación para manos</h1>
+            <h1 className="text-3xl font-bold text-center mb-4">Sesión de rehabilitación para brazos</h1>
             <p className="text-center text-gray-700 mb-4">
-                Realiza los ejercicios para mejorar la movilidad y fuerza de tu mano.
+                Realiza ejercicios diseñados para mejorar la fuerza y movilidad de los músculos de tus brazos.
             </p>
             {/**/}
             </div>
@@ -48,4 +48,4 @@ const HandSession: React.FC = () => {
     );
 };
 
-export default HandSession;
+export default ArmSession;
