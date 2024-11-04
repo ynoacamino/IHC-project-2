@@ -9,8 +9,8 @@ const GameOptions = () => {
   const games = [
     {
       title: "Canvas",
-      image: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=300",
-      description: "Survive in the mystical forest",
+      image: "https://www.haydnsymons.com/wp-content/uploads/2024/01/canvas-art.webp",
+      description: "Diviertete y explora pintando con tus manos",
       route: "/canvas" // Ruta para navegar al canvas
     },
     {
@@ -52,7 +52,7 @@ const GameOptions = () => {
               <h3 className="text-xl font-bold text-white mb-2">{game.title}</h3>
               <p className="text-gray-300">{game.description}</p>
               <button className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                Play Now
+                Comenzar
               </button>
             </div>
           </div>

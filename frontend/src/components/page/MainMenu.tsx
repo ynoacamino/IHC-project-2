@@ -10,7 +10,7 @@ const MainMenu = () => {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-white mb-8 animate-pulse">
-            Game Portal
+            Active Hand
           </h1>
         </div>
         
@@ -20,7 +20,7 @@ const MainMenu = () => {
             className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-lg font-medium rounded-lg text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all duration-200 ease-in-out transform hover:scale-105"
           >
             <Play className="mr-2 h-6 w-6" />
-            Start
+            Iniciar
           </button>
 
           <button
@@ -28,7 +28,7 @@ const MainMenu = () => {
             className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-in-out transform hover:scale-105"
           >
             <SettingsIcon className="mr-2 h-6 w-6" />
-            Options
+            Opciones
           </button>
 
           <button
@@ -36,7 +36,7 @@ const MainMenu = () => {
             className="w-full group relative flex justify-center py-4 px-4 border border-transparent text-lg font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-all duration-200 ease-in-out transform hover:scale-105"
           >
             <LogOut className="mr-2 h-6 w-6" />
-            Exit
+            Salir
           </button>
         </div>
       </div>
