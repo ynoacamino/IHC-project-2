@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
@@ -9,16 +9,16 @@ const Canvas = () => {
   const drawingCanvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const lastPositionRef = useRef({ x: 0, y: 0 });
-  const streamRef = useRef(null); 
-  const [brushColor, setBrushColor] = useState('black');
-  const intervalRef = useRef(null); 
-  const clearAreaRef = useRef({ x: 20, y: 20, width: 250, height: 100 }); 
+  const streamRef = useRef(null);
+  let brushColor = 'black'; // Cambiar aquí para manejar el color como variable
+  const intervalRef = useRef(null);
+  const clearAreaRef = useRef({ x: 20, y: 20, width: 250, height: 100 });
 
   useEffect(() => {
     const setupCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        streamRef.current = stream; // Guardar el flujo
+        streamRef.current = stream;
         videoRef.current.srcObject = stream;
 
         videoRef.current.onloadedmetadata = () => {
@@ -30,13 +30,13 @@ const Canvas = () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.save();
             ctx.scale(-1, 1);
-            
-            if (videoRef.current && videoRef.current.readyState >= 2) { // Asegúrate de que el video esté listo
+
+            if (videoRef.current && videoRef.current.readyState >= 2) {
               ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height);
             }
             ctx.restore();
             detectColor(ctx, canvas.width, canvas.height);
-            drawClearArea(ctx); // Dibuja el área de borrado
+            drawClearArea(ctx);
           }, 100);
         };
       } catch (error) {
@@ -58,10 +58,10 @@ const Canvas = () => {
 
   const drawClearArea = (ctx) => {
     ctx.save();
-    ctx.strokeStyle = 'transparent'; // Color del borde del área de borrado
+    ctx.strokeStyle = 'transparent';
     const clearArea = clearAreaRef.current;
     ctx.lineWidth = 2;
-    ctx.strokeRect(clearArea.x, clearArea.y, clearArea.width + 50, clearArea.height); // Dibuja el rectángulo del área de borrado
+    ctx.strokeRect(clearArea.x, clearArea.y, clearArea.width + 50, clearArea.height);
     ctx.restore();
   };
 
@@ -95,14 +95,14 @@ const Canvas = () => {
           centerY >= y &&
           centerY <= y + height
         ) {
-          clearCanvas(); // Borra si colisiona con el área de borrado
+          clearCanvas();
         } else {
           const drawingCanvas = drawingCanvasRef.current;
           const drawingCtx = drawingCanvas.getContext('2d');
 
-          drawingCtx.lineWidth = 5; // Grosor del lápiz
-          drawingCtx.lineCap = 'round'; // Bordes redondeados
-          drawingCtx.strokeStyle = brushColor; // Asegúrate de que use el color actualizado
+          drawingCtx.lineWidth = 5;
+          drawingCtx.lineCap = 'round';
+          drawingCtx.strokeStyle = brushColor; // Usa la variable aquí
 
           drawingCtx.beginPath();
           drawingCtx.moveTo(lastPositionRef.current.x, lastPositionRef.current.y);
@@ -116,25 +116,25 @@ const Canvas = () => {
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-      ctx.strokeStyle = 'black'; // Color del círculo
+      ctx.strokeStyle = 'black';
       ctx.lineWidth = 2;
       ctx.stroke();
 
       lastPositionRef.current = { x: centerX, y: centerY };
       isDrawingRef.current = true;
     } else {
-      isDrawingRef.current = false; // No hay negro, no dibujamos
+      isDrawingRef.current = false;
     }
   };
 
   const clearCanvas = () => {
     const drawingCanvas = drawingCanvasRef.current;
     const drawingCtx = drawingCanvas.getContext('2d');
-    drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); // Limpia el canvas de dibujo
+    drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
   };
 
   const handleNavigateBack = () => {
-    clearCanvas(); // Limpia el canvas antes de navegar
+    clearCanvas();
     navigate('/game-options');
   };
 
@@ -170,19 +170,19 @@ const Canvas = () => {
             style={{
               position: 'absolute',
               left: clearAreaRef.current.x,
-              top: clearAreaRef.current.y, 
-              width: clearAreaRef.current.width, 
-              height: clearAreaRef.current.height, 
+              top: clearAreaRef.current.y,
+              width: clearAreaRef.current.width,
+              height: clearAreaRef.current.height,
               backgroundColor: 'rgba(0, 0, 0, 0.0)',
-              pointerEvents: 'none' 
+              pointerEvents: 'none'
             }}
           />
           
           <div
             style={{
               position: 'absolute',
-              left: '10px', 
-              top: '10px', 
+              left: '10px',
+              top: '10px',
               padding: '10px',
             }}
           >
@@ -194,7 +194,7 @@ const Canvas = () => {
             </button>
             <button
               onClick={() => {
-                setBrushColor('yellow');
+                brushColor = 'yellow'; // Cambia el color directamente
               }} 
               className="bg-yellow-500 text-white px-14 py-5 rounded text-2xl"
             >
