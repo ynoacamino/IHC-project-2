@@ -9,11 +9,13 @@ const Canvas = () => {
   const drawingCanvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const lastPositionRef = useRef({ x: 0, y: 0 });
+  const streamRef = useRef(null); // Para guardar el flujo de video
 
   useEffect(() => {
     const setupCamera = async () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        streamRef.current = stream; // Guardar el flujo
         videoRef.current.srcObject = stream;
         videoRef.current.play();
 
@@ -35,8 +37,9 @@ const Canvas = () => {
     setupCamera();
 
     return () => {
-      if (videoRef.current && videoRef.current.srcObject) {
-        videoRef.current.srcObject.getTracks().forEach(track => track.stop());
+      // Detener el flujo de video al desmontar el componente
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
       }
     };
   }, []);
@@ -100,10 +103,15 @@ const Canvas = () => {
     drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); // Limpia el canvas de dibujo
   };
 
+  const handleNavigateBack = () => {
+    clearCanvas(); // Limpia el canvas antes de navegar
+    navigate('/game-options');
+  };
+
   return (
     <div className="min-h-screen p-4">
       <button
-        onClick={() => navigate('/game-options')}
+        onClick={handleNavigateBack} // Usa la función que limpia el canvas
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
       >
         <ArrowLeft className="h-8 w-8" />
