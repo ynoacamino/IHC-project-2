@@ -20,10 +20,10 @@ const GameOptions = () => {
       route: "/laberinto" // Puedes configurar una ruta específica
     },
     {
-      title: "Sigue la pista",
+      title: "Rehabilitación",
       image: "https://img.freepik.com/vector-gratis/ilustracion-concepto-preparacion-parto_114360-16571.jpg",
-      description: "Realiza las indicaciones",
-      route: "/rehabilitacion" // Otra ruta específica para este juego
+      description: "Realiza ejercicios de rehabilitación",
+      route: "/rehabilitation" // Otra ruta específica para este juego
     }
   ];
 
