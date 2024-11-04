@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Volume2, Monitor, Wifi } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 const Settings = () => {
   const navigate = useNavigate();
@@ -19,36 +19,41 @@ const Settings = () => {
           <h1 className="text-4xl font-bold text-white mb-8">Settings</h1>
         </div>
 
-        <div className="bg-gray-800 rounded-lg p-6 space-y-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center text-white">
-              <Volume2 className="h-6 w-6 mr-3" />
-              <span>Sound Volume</span>
-            </div>
-            <input type="range" className="w-32" />
+        <div className="bg-gray-800 rounded-lg p-6 space-y-4">
+          {/* Upper Hue */}
+          <div className="flex items-center justify-between text-white">
+            <span>Upper Hue</span>
+            <input type="range" min="0" max="255" className="w-32" />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center text-white">
-              <Monitor className="h-6 w-6 mr-3" />
-              <span>Graphics Quality</span>
-            </div>
-            <select className="bg-gray-700 text-white rounded-md px-3 py-1">
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
-            </select>
+          {/* Upper Saturation */}
+          <div className="flex items-center justify-between text-white">
+            <span>Upper Saturation</span>
+            <input type="range" min="0" max="255" className="w-32" />
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center text-white">
-              <Wifi className="h-6 w-6 mr-3" />
-              <span>Online Status</span>
-            </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input type="checkbox" className="sr-only peer" />
-              <div className="w-11 h-6 bg-gray-600 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
-            </label>
+          {/* Upper Value */}
+          <div className="flex items-center justify-between text-white">
+            <span>Upper Value</span>
+            <input type="range" min="0" max="255" className="w-32" />
+          </div>
+
+          {/* Lower Hue */}
+          <div className="flex items-center justify-between text-white">
+            <span>Lower Hue</span>
+            <input type="range" min="0" max="255" className="w-32" />
+          </div>
+
+          {/* Lower Saturation */}
+          <div className="flex items-center justify-between text-white">
+            <span>Lower Saturation</span>
+            <input type="range" min="0" max="255" className="w-32" />
+          </div>
+
+          {/* Lower Value */}
+          <div className="flex items-center justify-between text-white">
+            <span>Lower Value</span>
+            <input type="range" min="0" max="255" className="w-32" />
           </div>
         </div>
       </div>
