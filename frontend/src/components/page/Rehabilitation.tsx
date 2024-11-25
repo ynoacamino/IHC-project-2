@@ -13,14 +13,13 @@ const Rehabilitation = () => {
       >
         <ArrowLeft className="h-8 w-8" />
       </button>
-
-      <div className="text-center w-full max-w-6xl ">
-        <h1 className="text-4xl font-bold text-white mb-8">Rehabilitación</h1>
+      <div className="text-center w-full max-w-7xl ">
+        <h1 className="text-6xl font-bold text-white mb-8">Rehabilitación</h1>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 w-11/12 mx-auto">
           {/* Sección de la mano */}
           <div 
-            className="bg-green-600 rounded-lg p-6 cursor-pointer hover:bg-green-700 transition-colors w-full"
+            className="bg-green-600 rounded-lg p-6 cursor-pointer hover:bg-green-700 transition-colors transform hover:scale-105 transition-transform w-full"
             onClick={() => navigate('/hand-session')}
           >
             <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center">
@@ -37,7 +36,7 @@ const Rehabilitation = () => {
 
           {/* Sección del brazo */}
           <div 
-            className="bg-blue-600 rounded-lg p-6 cursor-pointer hover:bg-blue-700 transition-colors w-full"
+            className="bg-blue-600 rounded-lg p-6 cursor-pointer hover:bg-blue-700 transition-colors transform hover:scale-105 transition-transform w-full"
             onClick={() => navigate('/arm-session')}
           >
             <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center">
@@ -54,7 +53,7 @@ const Rehabilitation = () => {
 
           {/* Sección de los dedos */}
           <div 
-            className="bg-yellow-600 rounded-lg p-6 cursor-pointer hover:bg-yellow-700 transition-colors w-full"
+            className="bg-yellow-600 rounded-lg p-6 cursor-pointer hover:bg-yellow-700 transition-colors transform hover:scale-105 transition-transform w-full"
             onClick={() => navigate('/finger-session')}
           >
             <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center">
