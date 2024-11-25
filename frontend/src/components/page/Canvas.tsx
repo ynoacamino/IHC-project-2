@@ -73,7 +73,7 @@ const Canvas = () => {
     const yellowArea = yellowAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'yellow';
-    ctx.globalAlpha = 0.3; // Opacidad para que se vea como un área visible pero no intrusiva
+    ctx.globalAlpha = 0; 
     ctx.fillRect(yellowArea.x, yellowArea.y, yellowArea.width, yellowArea.height);
     ctx.restore();
   };
@@ -82,7 +82,7 @@ const Canvas = () => {
     const greenArea = greenAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'green';
-    ctx.globalAlpha = 0.3; // Opacidad para que se vea como un área visible pero no intrusiva
+    ctx.globalAlpha = 0; 
     ctx.fillRect(greenArea.x, greenArea.y, greenArea.width, greenArea.height);
     ctx.restore();
   };
