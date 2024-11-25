@@ -10,9 +10,11 @@ const Canvas = () => {
   const isDrawingRef = useRef(false);
   const lastPositionRef = useRef({ x: 0, y: 0 });
   const streamRef = useRef(null);
-  let brushColor = 'black'; // Cambiar aquí para manejar el color como variable
+  let brushColor = 'black'; // El color inicial es negro
   const intervalRef = useRef(null);
   const clearAreaRef = useRef({ x: 20, y: 20, width: 250, height: 100 });
+  const yellowAreaRef = useRef({ x: 300, y: 20, width: 250, height: 100 }); // El área amarilla
+  const greenAreaRef = useRef({ x: 600, y: 20, width: 250, height: 100 }); // El área verde
 
   useEffect(() => {
     const setupCamera = async () => {
@@ -37,6 +39,8 @@ const Canvas = () => {
             ctx.restore();
             detectColor(ctx, canvas.width, canvas.height);
             drawClearArea(ctx);
+            drawYellowArea(ctx); // Dibuja el área amarilla
+            drawGreenArea(ctx); // Dibuja el área verde
           }, 100);
         };
       } catch (error) {
@@ -65,6 +69,24 @@ const Canvas = () => {
     ctx.restore();
   };
 
+  const drawYellowArea = (ctx) => {
+    const yellowArea = yellowAreaRef.current;
+    ctx.save();
+    ctx.fillStyle = 'yellow';
+    ctx.globalAlpha = 0.3; // Opacidad para que se vea como un área visible pero no intrusiva
+    ctx.fillRect(yellowArea.x, yellowArea.y, yellowArea.width, yellowArea.height);
+    ctx.restore();
+  };
+
+  const drawGreenArea = (ctx) => {
+    const greenArea = greenAreaRef.current;
+    ctx.save();
+    ctx.fillStyle = 'green';
+    ctx.globalAlpha = 0.3; // Opacidad para que se vea como un área visible pero no intrusiva
+    ctx.fillRect(greenArea.x, greenArea.y, greenArea.width, greenArea.height);
+    ctx.restore();
+  };
+
   const detectColor = (ctx, width, height) => {
     const frame = ctx.getImageData(0, 0, width, height);
     const data = frame.data;
@@ -86,6 +108,7 @@ const Canvas = () => {
       const centerX = blackPixels.reduce((sum, pixel) => sum + pixel.x, 0) / blackPixels.length;
       const centerY = blackPixels.reduce((sum, pixel) => sum + pixel.y, 0) / blackPixels.length;
 
+      // Detección de borrado
       if (isDrawingRef.current) {
         const { x, y, width, height } = clearAreaRef.current;
 
@@ -102,7 +125,7 @@ const Canvas = () => {
 
           drawingCtx.lineWidth = 5;
           drawingCtx.lineCap = 'round';
-          drawingCtx.strokeStyle = brushColor; // Usa la variable aquí
+          drawingCtx.strokeStyle = brushColor;
 
           drawingCtx.beginPath();
           drawingCtx.moveTo(lastPositionRef.current.x, lastPositionRef.current.y);
@@ -111,9 +134,9 @@ const Canvas = () => {
         }
       }
 
+      // Dibuja el círculo alrededor del puntero
       const area = blackPixels.length;
       const radius = Math.sqrt(area / Math.PI);
-
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
       ctx.strokeStyle = 'black';
@@ -122,6 +145,28 @@ const Canvas = () => {
 
       lastPositionRef.current = { x: centerX, y: centerY };
       isDrawingRef.current = true;
+
+      // Detección del área amarilla
+      const yellowArea = yellowAreaRef.current;
+      if (
+        centerX >= yellowArea.x &&
+        centerX <= yellowArea.x + yellowArea.width &&
+        centerY >= yellowArea.y &&
+        centerY <= yellowArea.y + yellowArea.height
+      ) {
+        brushColor = 'yellow'; // Cambia el color del pincel a amarillo
+      }
+
+      // Detección del área verde
+      const greenArea = greenAreaRef.current;
+      if (
+        centerX >= greenArea.x &&
+        centerX <= greenArea.x + greenArea.width &&
+        centerY >= greenArea.y &&
+        centerY <= greenArea.y + greenArea.height
+      ) {
+        brushColor = 'green'; // Cambia el color del pincel a verde
+      }
     } else {
       isDrawingRef.current = false;
     }
@@ -194,11 +239,19 @@ const Canvas = () => {
             </button>
             <button
               onClick={() => {
-                brushColor = 'yellow'; // Cambia el color directamente
+                brushColor = 'yellow'; 
               }} 
               className="bg-yellow-500 text-white px-14 py-5 rounded text-2xl"
             >
               Amarillo
+            </button>
+            <button
+              onClick={() => {
+                brushColor = 'green'; 
+              }} 
+              className="bg-green-500 text-white px-14 py-5 rounded text-2xl"
+            >
+              Verde
             </button>
           </div>
         </div>
