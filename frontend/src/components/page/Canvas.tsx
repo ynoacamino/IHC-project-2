@@ -1,66 +1,29 @@
+/* eslint-disable jsx-a11y/media-has-caption */
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-const Canvas = () => {
+function Canvas() {
   const navigate = useNavigate();
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
-  const drawingCanvasRef = useRef(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawingRef = useRef(false);
   const lastPositionRef = useRef({ x: 0, y: 0 });
-  const streamRef = useRef(null);
+  const streamRef = useRef<MediaStream | null>(null);
   let brushColor = 'black'; // El color inicial es negro
-  const intervalRef = useRef(null);
-  const clearAreaRef = useRef({ x: 20, y: 20, width: 250, height: 100 });
-  const yellowAreaRef = useRef({ x: 300, y: 20, width: 250, height: 100 }); // El área amarilla
-  const greenAreaRef = useRef({ x: 600, y: 20, width: 250, height: 100 }); // El área verde
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const clearAreaRef = useRef({
+    x: 20, y: 20, width: 250, height: 100,
+  });
+  const yellowAreaRef = useRef({
+    x: 300, y: 20, width: 250, height: 100,
+  }); // El área amarilla
+  const greenAreaRef = useRef({
+    x: 600, y: 20, width: 250, height: 100,
+  }); // El área verde
 
-  useEffect(() => {
-    const setupCamera = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        streamRef.current = stream;
-        videoRef.current.srcObject = stream;
-
-        videoRef.current.onloadedmetadata = () => {
-          videoRef.current.play();
-          const canvas = canvasRef.current;
-          const ctx = canvas.getContext('2d');
-
-          intervalRef.current = setInterval(() => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.save();
-            ctx.scale(-1, 1);
-
-            if (videoRef.current && videoRef.current.readyState >= 2) {
-              ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height);
-            }
-            ctx.restore();
-            detectColor(ctx, canvas.width, canvas.height);
-            drawClearArea(ctx);
-            drawYellowArea(ctx); // Dibuja el área amarilla
-            drawGreenArea(ctx); // Dibuja el área verde
-          }, 100);
-        };
-      } catch (error) {
-        console.error('Error accessing camera:', error);
-      }
-    };
-
-    setupCamera();
-
-    return () => {
-      if (streamRef.current) {
-        streamRef.current.getTracks().forEach(track => track.stop());
-      }
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
-
-  const drawClearArea = (ctx) => {
+  const drawClearArea = (ctx: CanvasRenderingContext2D) => {
     ctx.save();
     ctx.strokeStyle = 'transparent';
     const clearArea = clearAreaRef.current;
@@ -69,27 +32,37 @@ const Canvas = () => {
     ctx.restore();
   };
 
-  const drawYellowArea = (ctx) => {
+  const drawYellowArea = (ctx: CanvasRenderingContext2D) => {
     const yellowArea = yellowAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'yellow';
-    ctx.globalAlpha = 0; 
+    ctx.globalAlpha = 0;
     ctx.fillRect(yellowArea.x, yellowArea.y, yellowArea.width, yellowArea.height);
     ctx.restore();
   };
 
-  const drawGreenArea = (ctx) => {
+  const drawGreenArea = (ctx: CanvasRenderingContext2D) => {
     const greenArea = greenAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'green';
-    ctx.globalAlpha = 0; 
+    ctx.globalAlpha = 0;
     ctx.fillRect(greenArea.x, greenArea.y, greenArea.width, greenArea.height);
     ctx.restore();
   };
 
-  const detectColor = (ctx, width, height) => {
+  const clearCanvas = () => {
+    const drawingCanvas = drawingCanvasRef.current;
+    if (!drawingCanvas) return;
+
+    const drawingCtx = drawingCanvas.getContext('2d');
+    if (!drawingCtx) return;
+
+    drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+  };
+
+  const detectColor = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     const frame = ctx.getImageData(0, 0, width, height);
-    const data = frame.data;
+    const { data } = frame;
     const blackPixels = [];
 
     for (let i = 0; i < data.length; i += 4) {
@@ -110,18 +83,24 @@ const Canvas = () => {
 
       // Detección de borrado
       if (isDrawingRef.current) {
-        const { x, y, width, height } = clearAreaRef.current;
+        const {
+          // eslint-disable-next-line @typescript-eslint/no-shadow
+          x, y, width, height,
+        } = clearAreaRef.current;
 
         if (
-          centerX >= x &&
-          centerX <= x + width &&
-          centerY >= y &&
-          centerY <= y + height
+          centerX >= x
+          && centerX <= x + width
+          && centerY >= y
+          && centerY <= y + height
         ) {
           clearCanvas();
         } else {
           const drawingCanvas = drawingCanvasRef.current;
+          if (!drawingCanvas) return;
+
           const drawingCtx = drawingCanvas.getContext('2d');
+          if (!drawingCtx) return;
 
           drawingCtx.lineWidth = 5;
           drawingCtx.lineCap = 'round';
@@ -149,10 +128,10 @@ const Canvas = () => {
       // Detección del área amarilla
       const yellowArea = yellowAreaRef.current;
       if (
-        centerX >= yellowArea.x &&
-        centerX <= yellowArea.x + yellowArea.width &&
-        centerY >= yellowArea.y &&
-        centerY <= yellowArea.y + yellowArea.height
+        centerX >= yellowArea.x
+        && centerX <= yellowArea.x + yellowArea.width
+        && centerY >= yellowArea.y
+        && centerY <= yellowArea.y + yellowArea.height
       ) {
         brushColor = 'yellow'; // Cambia el color del pincel a amarillo
       }
@@ -160,10 +139,10 @@ const Canvas = () => {
       // Detección del área verde
       const greenArea = greenAreaRef.current;
       if (
-        centerX >= greenArea.x &&
-        centerX <= greenArea.x + greenArea.width &&
-        centerY >= greenArea.y &&
-        centerY <= greenArea.y + greenArea.height
+        centerX >= greenArea.x
+        && centerX <= greenArea.x + greenArea.width
+        && centerY >= greenArea.y
+        && centerY <= greenArea.y + greenArea.height
       ) {
         brushColor = 'green'; // Cambia el color del pincel a verde
       }
@@ -172,11 +151,60 @@ const Canvas = () => {
     }
   };
 
-  const clearCanvas = () => {
-    const drawingCanvas = drawingCanvasRef.current;
-    const drawingCtx = drawingCanvas.getContext('2d');
-    drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
-  };
+  useEffect(() => {
+    const setupCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        streamRef.current = stream;
+
+        if (!videoRef.current) return;
+
+        videoRef.current.srcObject = stream;
+
+        videoRef.current.onloadedmetadata = () => {
+          if (!videoRef.current) return;
+
+          videoRef.current.play();
+
+          if (!canvasRef.current) return;
+
+          const canvas = canvasRef.current;
+          const ctx = canvas.getContext('2d');
+
+          if (!ctx) return;
+
+          intervalRef.current = setInterval(() => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.save();
+            ctx.scale(-1, 1);
+
+            if (videoRef.current && videoRef.current.readyState >= 2) {
+              ctx.drawImage(videoRef.current, -canvas.width, 0, canvas.width, canvas.height);
+            }
+            ctx.restore();
+            detectColor(ctx, canvas.width, canvas.height);
+            drawClearArea(ctx);
+            drawYellowArea(ctx); // Dibuja el área amarilla
+            drawGreenArea(ctx); // Dibuja el área verde
+          }, 100);
+        };
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error accessing camera:', error);
+      }
+    };
+
+    setupCamera();
+
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => track.stop());
+      }
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
 
   const handleNavigateBack = () => {
     clearCanvas();
@@ -186,6 +214,7 @@ const Canvas = () => {
   return (
     <div className="min-h-screen p-4">
       <button
+        type="button"
         onClick={handleNavigateBack}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
       >
@@ -219,10 +248,10 @@ const Canvas = () => {
               width: clearAreaRef.current.width,
               height: clearAreaRef.current.height,
               backgroundColor: 'rgba(0, 0, 0, 0.0)',
-              pointerEvents: 'none'
+              pointerEvents: 'none',
             }}
           />
-          
+
           <div
             style={{
               position: 'absolute',
@@ -232,23 +261,26 @@ const Canvas = () => {
             }}
           >
             <button
+              type="button"
               onClick={clearCanvas}
               className="bg-red-500 text-white px-16 py-5 rounded text-2xl"
             >
               Borrar
             </button>
             <button
+              type="button"
               onClick={() => {
-                brushColor = 'yellow'; 
-              }} 
+                brushColor = 'yellow';
+              }}
               className="bg-yellow-500 text-white px-14 py-5 rounded text-2xl"
             >
               Amarillo
             </button>
             <button
+              type="button"
               onClick={() => {
-                brushColor = 'green'; 
-              }} 
+                brushColor = 'green';
+              }}
               className="bg-green-500 text-white px-14 py-5 rounded text-2xl"
             >
               Verde
@@ -258,6 +290,6 @@ const Canvas = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Canvas;

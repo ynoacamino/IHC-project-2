@@ -2,16 +2,19 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-const Settings = () => {
+function Settings() {
   const navigate = useNavigate();
   const [red, setRed] = useState(0);
   const [green, setGreen] = useState(0);
   const [blue, setBlue] = useState(0);
 
   // Función para manejar los cambios en los sliders
-  const handleRedChange = (event) => setRed(event.target.value);
-  const handleGreenChange = (event) => setGreen(event.target.value);
-  const handleBlueChange = (event) => setBlue(event.target.value);
+  const handleRedChange:
+  React.ChangeEventHandler<HTMLInputElement> = (event) => setRed(Number(event.target.value));
+  const handleGreenChange:
+  React.ChangeEventHandler<HTMLInputElement> = (event) => setGreen(Number(event.target.value));
+  const handleBlueChange:
+  React.ChangeEventHandler<HTMLInputElement> = (event) => setBlue(Number(event.target.value));
 
   // Color resultante basado en los valores RGB
   const rgbColor = `rgb(${red}, ${green}, ${blue})`;
@@ -20,6 +23,7 @@ const Settings = () => {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-md w-full space-y-8">
         <button
+          type="button"
           onClick={() => navigate('/')}
           className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
         >
@@ -83,13 +87,16 @@ const Settings = () => {
           </div>
 
           {/* Botón de Guardar */}
-          <button className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors">
+          <button
+            type="button"
+            className="w-full bg-purple-600 text-white py-2 rounded-lg hover:bg-purple-700 transition-colors"
+          >
             Guardar
           </button>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Settings;

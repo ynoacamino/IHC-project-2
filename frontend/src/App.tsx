@@ -5,10 +5,10 @@ import GameOptions from '@/components/page/GameOptions';
 import Canvas from '@/components/page/Canvas';
 import VideoGames from '@/components/page/VideoGames';
 import Rehabilitation from '@/components/page/Rehabilitation';
+import Settings from '@/components/page/Settings';
 import HandSession from './components/page/HandSession';
 import ArmSession from './components/page/ArmSession';
 import FingerSession from './components/page/FingerSession';
-import Settings from '@/components/page/Settings';
 import Maze from './components/page/Maze';
 
 function App() {
