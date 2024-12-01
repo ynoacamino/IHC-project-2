@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { useSettings } from './SettingsContext'; // Importar el hook del contexto
 
 function Settings() {
   const navigate = useNavigate();
-  const [red, setRed] = useState(0);
-  const [green, setGreen] = useState(0);
-  const [blue, setBlue] = useState(0);
+  const { red, green, blue, setRed, setGreen, setBlue, rgbColor } = useSettings();
 
-  // Función para manejar los cambios en los sliders
-  const handleRedChange:
-  React.ChangeEventHandler<HTMLInputElement> = (event) => setRed(Number(event.target.value));
-  const handleGreenChange:
-  React.ChangeEventHandler<HTMLInputElement> = (event) => setGreen(Number(event.target.value));
-  const handleBlueChange:
-  React.ChangeEventHandler<HTMLInputElement> = (event) => setBlue(Number(event.target.value));
-
-  // Color resultante basado en los valores RGB
-  const rgbColor = `rgb(${red}, ${green}, ${blue})`;
+  // Funciones de manejo de sliders ya no usan estados locales
+  const handleRedChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
+    setRed(Number(event.target.value));
+  const handleGreenChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
+    setGreen(Number(event.target.value));
+  const handleBlueChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
+    setBlue(Number(event.target.value));
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
