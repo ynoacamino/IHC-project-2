@@ -268,41 +268,68 @@ function Maze() {
       </button>
 
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-8">Maze with Camera</h1>
+        <h1 className="text-4xl font-bold mb-8">Maze</h1>
+      </div>
+      <div
+        className="mx-auto w-[100%] md:w-[40%] h-auto bg-slate-50 p-3 flex flex-col
+      justify-center items-center
+      rounded-md"
+      >
+        <div
+          className="w-[60%] h-auto grid grid-cols-7 gap-2 justify-center items-center rounded-sm"
+        >
+          {mazeGrid.map((row, rowIndex) =>
+            row.map((cell, cellIndex) => {
+              const isPlayer = position.y === rowIndex && position.x === cellIndex;
+
+              return (
+                <div
+                  key={`${rowIndex},${cellIndex}`}
+                  className={`w/7 h-12 flex justify-center items-center
+                   rounded-sm shadow-md
+                   ${cell ? "bg-" : "bg-white"}`}
+                  style={{
+                    backgroundColor: isPlayer ? "#4ADE80" : cell ? "#1F2937" : "#F3F4F9",
+                  }}
+                >
+                  {isPlayer && (
+                    <div
+                      className="grid center w-1/2 h-1/2 rounded-full bg-blue-500"
+                    />
+                  )}
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        <div className="flex flex-col justify-center items-center gap-1 mt-4">
+          <button onClick={() => movePlayer("up")} className="p-2 bg-blue-700 text-white rounded-md">
+            <ArrowUp />
+          </button>
+          <div className="flex space-x-2">
+            <button onClick={() => movePlayer("left")} className="p-2 bg-blue-700 text-white rounded-md">
+              <ArrowLeft />
+            </button>
+            <button onClick={() => movePlayer("down")} className="p-2 bg-blue-700 text-white rounded-md">
+              <ArrowDown />
+            </button>
+            <button onClick={() => movePlayer("right")} className="p-2 bg-blue-700 text-white rounded-md">
+              <ArrowRight />
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="flex justify-center items-start">
-        {/* Laberinto */}
-        <div className="grid grid-cols-7 gap-2">
-          {mazeGrid.map((row, rowIndex) => row.map((cell, cellIndex) => {
-            const isPlayer = position.y === rowIndex && position.x === cellIndex;
-
-            return (
-              <div
-                key={`${rowIndex},${cellIndex}`}
-                className={`w-16 h-16 ${
-                  cell ? 'bg-gray-700' : 'bg-gray-300'
-                } flex justify-center items-center`}
-              >
-                {isPlayer && <div className="w-12 h-12 bg-blue-500 rounded-full" />}
-              </div>
-            );
-          }))}
-        </div>
-
-        {/* Cámara */}
-        <div className="ml-8">
-          <video
-            ref={videoRef}
-            className="w-48 h-36 border-2 border-white rounded-lg"
-            autoPlay
-            playsInline
-          />
-          <canvas
-            ref={canvasRef}
-            className="w-48 h-36 border-2 border-gray-500 rounded-lg mt-2"
-          />
-        </div>
+      {/* Cámara y Canvas */}
+      <div className="flex justify-center mt-8">
+        <video ref={videoRef} className="hidden" autoPlay playsInline />
+        <canvas
+          ref={canvasRef}
+          width="300"
+          height="200"
+          className="border-2 border-gray-500 rounded-lg"
+        ></canvas>
       </div>
 
       <Modal
