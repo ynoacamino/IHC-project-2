@@ -13,11 +13,13 @@ const Canvas = () => {
   let brushColor = 'black';
   const intervalRef = useRef(null);
 
-  const clearAreaRef = useRef({ x: 20, y: 20, width: 150, height: 100 });
-  const yellowAreaRef = useRef({ x: 220, y: 25, width: 220, height: 100 }); 
-  const greenAreaRef = useRef({ x: 445, y: 25, width: 220, height: 100 }); 
-  const redAreaRef = useRef({ x: 667, y: 25, width: 220, height: 100 }); 
-  const blueAreaRef = useRef({ x: 890, y: 25, width: 220, height: 100 }); 
+  const clearAreaRef = useRef({ x: 20, y: 800, width: 220, height: 100 });
+  const yellowAreaRef = useRef({ x: 43, y: 25, width: 220, height: 100 });
+  const greenAreaRef = useRef({ x: 267, y: 25, width: 220, height: 100 });
+  const redAreaRef = useRef({ x: 490, y: 25, width: 220, height: 100 });
+  const blueAreaRef = useRef({ x: 713, y: 25, width: 220, height: 100 });
+  const purpleAreaRef = useRef({ x: 935, y: 25, width: 220, height: 100 }); // Nueva área para el color morado
+  const blackAreaRef = useRef({ x: 970, y: 785, width: 220, height: 100 });
 
   useEffect(() => {
     const setupCamera = async () => {
@@ -46,6 +48,8 @@ const Canvas = () => {
             drawGreenArea(ctx);
             drawRedArea(ctx);
             drawBlueArea(ctx);
+            drawPurpleArea(ctx); 
+            drawBlackArea(ctx);
           }, 100);
         };
       } catch (error) {
@@ -78,7 +82,7 @@ const Canvas = () => {
     const yellowArea = yellowAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'yellow';
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 0;
     ctx.fillRect(yellowArea.x, yellowArea.y, yellowArea.width, yellowArea.height);
     ctx.restore();
   };
@@ -87,7 +91,7 @@ const Canvas = () => {
     const greenArea = greenAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'green';
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 0;
     ctx.fillRect(greenArea.x, greenArea.y, greenArea.width, greenArea.height);
     ctx.restore();
   };
@@ -96,7 +100,7 @@ const Canvas = () => {
     const redArea = redAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'red';
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 0;
     ctx.fillRect(redArea.x, redArea.y, redArea.width, redArea.height);
     ctx.restore();
   };
@@ -105,8 +109,26 @@ const Canvas = () => {
     const blueArea = blueAreaRef.current;
     ctx.save();
     ctx.fillStyle = 'blue';
-    ctx.globalAlpha = 1;
+    ctx.globalAlpha = 0;
     ctx.fillRect(blueArea.x, blueArea.y, blueArea.width, blueArea.height);
+    ctx.restore();
+  };
+
+  const drawPurpleArea = (ctx) => {
+    const purpleArea = purpleAreaRef.current;
+    ctx.save();
+    ctx.fillStyle = 'purple'; // Color morado
+    ctx.globalAlpha = 0;
+    ctx.fillRect(purpleArea.x, purpleArea.y, purpleArea.width, purpleArea.height);
+    ctx.restore();
+  };
+
+  const drawBlackArea = (ctx) => {
+    const blackArea = blackAreaRef.current;
+    ctx.save();
+    ctx.fillStyle = 'black';
+    ctx.globalAlpha = 0;
+    ctx.fillRect(blackArea.x, blackArea.y, blackArea.width, blackArea.height);
     ctx.restore();
   };
 
@@ -207,6 +229,27 @@ const Canvas = () => {
       ) {
         brushColor = 'blue';
       }
+
+      const purpleArea = purpleAreaRef.current;
+      if (
+        centerX >= purpleArea.x &&
+        centerX <= purpleArea.x + purpleArea.width &&
+        centerY >= purpleArea.y &&
+        centerY <= purpleArea.y + purpleArea.height
+      ) {
+        brushColor = 'purple';
+      }
+
+      const blackArea = blackAreaRef.current;
+      if (
+        centerX >= blackArea.x &&
+        centerX <= blackArea.x + blackArea.width &&
+        centerY >= blackArea.y &&
+        centerY <= blackArea.y + blackArea.height
+      ) {
+        brushColor = 'black';
+      }
+
     } else {
       isDrawingRef.current = false;
     }
@@ -233,7 +276,7 @@ const Canvas = () => {
       </button>
 
       <div className="text-center">
-        <h1 className="text-4xl font-bold text-white mb-8">Canvas Mode</h1>
+        <h1 className="text-3xl font-bold text-white mb-8">"Dibuja lo que sientes, no solo lo que ves"</h1>
         <div className="bg-white rounded-lg p-4 max-w-4xl mx-auto relative">
           <video ref={videoRef} className="hidden" autoPlay playsInline />
           <canvas
@@ -254,24 +297,65 @@ const Canvas = () => {
           <div
             style={{
               position: 'absolute',
-              left: clearAreaRef.current.x,
-              top: clearAreaRef.current.y,
-              width: clearAreaRef.current.width,
-              height: clearAreaRef.current.height,
-              backgroundColor: 'rgba(0, 0, 0, 1.0)',
-              pointerEvents: 'none'
+              left: '50%',
+              top: '10px',
+              padding: '10px',
+              display: 'flex',
+              gap: '10px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              transform: 'translateX(-50%)',
             }}
-          />
-          
+          >
+            <button
+              onClick={() => { brushColor = 'yellow'; }} 
+              className="bg-[#F7D63B] text-white px-14 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
+            >
+              Amarillo
+            </button>
+
+
+            <button
+              onClick={() => { brushColor = 'green'; }} 
+              className="bg-green-500 text-white px-14 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
+            >
+              Verde
+            </button>
+
+
+            <button
+              onClick={() => { brushColor = 'red'; }} 
+              className="bg-[#F7665E] text-white px-14 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
+            >
+              Rojo
+            </button>
+
+
+            <button
+              onClick={() => { brushColor = 'blue'; }} 
+              className="bg-blue-500 text-white px-14 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
+            >
+              Azul
+            </button>
+
+            <button
+              onClick={() => { brushColor = 'purple'; }} 
+              className="bg-purple-500 text-white px-14 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
+            >
+              Morado
+            </button>
+          </div>
+
+
           <div
             style={{
               position: 'absolute',
               left: '10px',
-              top: '10px',
+              bottom: '10px',
               padding: '10px',
               display: 'flex',
-              gap: '10px', 
-              flexWrap: 'wrap',
+              width: 'calc(100% - 20px)', 
+              justifyContent: 'space-between', 
             }}
           >
             <button
@@ -282,39 +366,12 @@ const Canvas = () => {
             </button>
 
             <button
-              onClick={() => {
-                brushColor = 'yellow';
-              }} 
-              className="bg-yellow-500 text-white px-14 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
+              onClick={() => { brushColor = 'black'; }} 
+              className="bg-[#4a4a4a] text-[#ffffff] px-16 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
             >
-              Amarillo
-            </button>
-            <button
-              onClick={() => {
-                brushColor = 'green'; 
-              }} 
-              className="bg-green-500 text-white px-14 py-5 rounded text-2xl flex justify-center items-center min-w-[120px] max-w-[150px]"
-            >
-              Verde
-            </button>
-            <button
-              onClick={() => {
-                brushColor = 'red'; 
-              }} 
-              className="bg-red-500 text-white px-14 py-5 rounded text-2xl flex-1 min-w-[120px] max-w-[150px]"
-            >
-              Rojo
-            </button>
-            <button
-              onClick={() => {
-                brushColor = 'blue'; 
-              }} 
-              className="bg-blue-500 text-white px-14 py-5 rounded text-2xl flex-1 min-w-[120px] max-w-[150px]"
-            >
-              Azul
+              Negro
             </button>
           </div>
-
         </div>
       </div>
     </div>
