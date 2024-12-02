@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { useSettings } from './SettingsContext'; 
 
 const Canvas = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ const Canvas = () => {
   const drawingCanvasRef = useRef(null);
   const isDrawingRef = useRef(false);
   const lastPositionRef = useRef({ x: 0, y: 0 });
+  const { red, green, blue } = useSettings();
   const streamRef = useRef(null);
   let brushColor = 'black';
   const intervalRef = useRef(null);
@@ -132,26 +134,27 @@ const Canvas = () => {
     ctx.restore();
   };
 
-  const detectColor = (ctx, width, height) => {
+  const detectColor = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     const frame = ctx.getImageData(0, 0, width, height);
-    const data = frame.data;
-    const blackPixels = [];
-
+    const { data } = frame;
+    const detectedPixels = [];
+  
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
-
-      if (r < 50 && g < 50 && b < 50) {
+  
+      // Comparar el color con los valores de SettingsContext
+      if (Math.abs(r - red) < 30 && Math.abs(g - green) < 30 && Math.abs(b - blue) < 30) {
         const x = (i / 4) % width;
         const y = Math.floor((i / 4) / width);
-        blackPixels.push({ x, y });
+        detectedPixels.push({ x, y });
       }
     }
-
-    if (blackPixels.length > 0) {
-      const centerX = blackPixels.reduce((sum, pixel) => sum + pixel.x, 0) / blackPixels.length;
-      const centerY = blackPixels.reduce((sum, pixel) => sum + pixel.y, 0) / blackPixels.length;
+  
+    if (detectedPixels.length > 0) {
+      const centerX = detectedPixels.reduce((sum, pixel) => sum + pixel.x, 0) / detectedPixels.length;
+      const centerY = detectedPixels.reduce((sum, pixel) => sum + pixel.y, 0) / detectedPixels.length;
 
       if (isDrawingRef.current) {
         const { x, y, width, height } = clearAreaRef.current;
@@ -178,7 +181,7 @@ const Canvas = () => {
         }
       }
 
-      const area = blackPixels.length;
+      const area = detectedPixels.length;
       const radius = Math.sqrt(area / Math.PI);
 
       ctx.beginPath();
