@@ -26,7 +26,7 @@ const mazeGrid = [
   [false, true, true, true, true, true, true],
 ];
 
-const Maze = () => {
+function Maze() {
   const navigate = useNavigate();
   const { red, green, blue, threshold } = useSettings();
   const [position, setPosition] = useState<Position>(initialPosition);
@@ -57,11 +57,11 @@ const Maze = () => {
     if (direction === "right") newCol++;
 
     if (
-      newCol >= 0 &&
-      newCol < gridSize &&
-      newRow >= 0 &&
-      newRow < gridSize &&
-      !mazeGrid[newRow][newCol]
+      newCol >= 0
+      && newCol < gridSize
+      && newRow >= 0
+      && newRow < gridSize
+      && !mazeGrid[newRow][newCol]
     ) {
       setPosition({ x: newCol, y: newRow });
     }
@@ -153,8 +153,8 @@ const Maze = () => {
 
   // Detecta colores y realiza el movimiento
   const detectColorAndMove = (ctx: CanvasRenderingContext2D) => {
-    const width = canvasRef.current!.width;
-    const height = canvasRef.current!.height;
+    const { width } = (canvasRef.current!);
+    const { height } = (canvasRef.current!);
 
     const frame = ctx.getImageData(0, 0, width, height);
     const { data } = frame;
@@ -186,7 +186,7 @@ const Maze = () => {
       // Dibujar el círculo de reconocimiento
       ctx.beginPath();
       ctx.arc(centerX, centerY, 10, 0, Math.PI * 2);
-      ctx.strokeStyle = "black";
+      ctx.strokeStyle = 'black';
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -194,10 +194,10 @@ const Maze = () => {
       const horizontalThreshold = width / 3;
       const verticalThreshold = height / 3;
 
-      if (centerY < verticalThreshold) movePlayer("up");
-      else if (centerY > 2 * verticalThreshold) movePlayer("down");
-      else if (centerX < horizontalThreshold) movePlayer("left");
-      else if (centerX > 2 * horizontalThreshold) movePlayer("right");
+      if (centerY < verticalThreshold) movePlayer('up');
+      else if (centerY > 2 * verticalThreshold) movePlayer('down');
+      else if (centerX < horizontalThreshold) movePlayer('left');
+      else if (centerX > 2 * horizontalThreshold) movePlayer('right');
     }
   };
 
@@ -213,7 +213,7 @@ const Maze = () => {
           videoRef.current.play();
 
           if (canvasRef.current) {
-            const ctx = canvasRef.current.getContext("2d");
+            const ctx = canvasRef.current.getContext('2d');
 
             if (ctx) {
               const renderFrame = () => {
@@ -239,7 +239,7 @@ const Maze = () => {
           }
         }
       } catch (error) {
-        console.error("Error accessing camera:", error);
+        console.error('Error accessing camera:', error);
       }
     };
 
@@ -261,44 +261,47 @@ const Maze = () => {
   return (
     <div className="min-h-screen p-4 bg-gray-900 text-white">
       <button
-        onClick={() => navigate("/game-options")}
+        onClick={() => navigate('/game-options')}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
       >
         <ArrowLeft className="h-8 w-8" />
       </button>
 
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-8">Maze</h1>
+        <h1 className="text-4xl font-bold mb-8">Maze with Camera</h1>
       </div>
 
-      <div className="flex flex-col md:flex-row w-[100%]">
-        <div className="mx-auto w-[100%] md:w-[40%] h-auto bg-slate-50 p-3 flex flex-col justify-center items-center rounded-md">
-          <div className="w-[70%] md:w-[90%] h-auto grid grid-cols-7 gap-2 justify-center items-center rounded-sm">
-            {mazeGrid.map((row, rowIndex) =>
-              row.map((cell, cellIndex) => {
-                const isPlayer = position.y === rowIndex && position.x === cellIndex;
+      <div className="flex justify-center items-start">
+        {/* Laberinto */}
+        <div className="grid grid-cols-7 gap-2">
+          {mazeGrid.map((row, rowIndex) => row.map((cell, cellIndex) => {
+            const isPlayer = position.y === rowIndex && position.x === cellIndex;
 
-                return (
-                  <div
-                    key={`${rowIndex},${cellIndex}`}
-                    className={`w/7 h-16 flex justify-center items-center rounded-sm shadow-md ${cell ? "bg-" : "bg-white"}`}
-                    style={{
-                      backgroundColor: isPlayer ? "#4ADE80" : cell ? "#1F2937" : "#F3F4F9",
-                    }}
-                  >
-                    {isPlayer && <div className="grid center w-1/2 h-1/2 rounded-full bg-blue-500" />}
-                  </div>
-                );
-              })
-            )}
-          </div>
+            return (
+              <div
+                key={`${rowIndex},${cellIndex}`}
+                className={`w-16 h-16 ${
+                  cell ? 'bg-gray-700' : 'bg-gray-300'
+                } flex justify-center items-center`}
+              >
+                {isPlayer && <div className="w-12 h-12 bg-blue-500 rounded-full" />}
+              </div>
+            );
+          }))}
         </div>
 
-        <div className="flex justify-center flex-row w-full md:w-1/2 md:flex-col">
-          <div className="flex justify-center mt-2">
-            <video ref={videoRef} className="hidden" autoPlay playsInline />
-            <canvas ref={canvasRef} width="600" height="500" className="border-2 border-gray-500 rounded-lg"></canvas>
-          </div>
+        {/* Cámara */}
+        <div className="ml-8">
+          <video
+            ref={videoRef}
+            className="w-48 h-36 border-2 border-white rounded-lg"
+            autoPlay
+            playsInline
+          />
+          <canvas
+            ref={canvasRef}
+            className="w-48 h-36 border-2 border-gray-500 rounded-lg mt-2"
+          />
         </div>
       </div>
 
@@ -318,11 +321,11 @@ const Maze = () => {
           >
             Try Again
           </button>
-          
+
         </div>
       </Modal>
     </div>
   );
-};
+}
 
 export default Maze;
