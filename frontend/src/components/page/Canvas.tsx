@@ -182,7 +182,7 @@ const Canvas = () => {
       }
 
       const area = detectedPixels.length;
-      const radius = Math.sqrt(area / Math.PI);
+      const radius = Math.sqrt(area / Math.PI) * 1.3;
 
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
