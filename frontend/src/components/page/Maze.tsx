@@ -151,6 +151,57 @@ const Maze = () => {
     ctx.restore();
   };
 
+  // Detecta colores y realiza el movimiento
+  const detectColorAndMove = (ctx: CanvasRenderingContext2D) => {
+    const width = canvasRef.current!.width;
+    const height = canvasRef.current!.height;
+
+    const frame = ctx.getImageData(0, 0, width, height);
+    const { data } = frame;
+
+    let sumX = 0;
+    let sumY = 0;
+    let pixelCount = 0;
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      // Detección de color específico (rojo)
+      if (r > 200 && g < 180 && b < 150) {
+        const x = (i / 4) % width;
+        const y = Math.floor(i / 4 / width);
+
+        sumX += x;
+        sumY += y;
+        pixelCount++;
+      }
+    }
+
+    if (pixelCount > 0) {
+      const centerX = sumX / pixelCount;
+      const centerY = sumY / pixelCount;
+
+      // Dibujar el círculo de reconocimiento
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 10, 0, Math.PI * 2);
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Determinar el movimiento basado en la posición del círculo
+      const horizontalThreshold = width / 3;
+      const verticalThreshold = height / 3;
+
+      if (centerY < verticalThreshold) movePlayer("up");
+      else if (centerY > 2 * verticalThreshold) movePlayer("down");
+      else if (centerX < horizontalThreshold) movePlayer("left");
+      else if (centerX > 2 * horizontalThreshold) movePlayer("right");
+    }
+  };
+
+  // Configuración de la cámara y dibujo en canvas
   useEffect(() => {
     const setupCamera = async () => {
       try {
@@ -267,6 +318,7 @@ const Maze = () => {
           >
             Try Again
           </button>
+          
         </div>
       </Modal>
     </div>
