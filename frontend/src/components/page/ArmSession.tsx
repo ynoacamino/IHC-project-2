@@ -39,18 +39,26 @@ const ArmSession: React.FC = () => {
             >
                 <ArrowLeft className="h-8 w-8" />
             </button>
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-4xl overflow-hidden">
-                <video
-                    ref={videoRef}
-                    className="w-full h-full object-cover"
-                    autoPlay
-                    playsInline
-                />
-                <div className="p-4">
-                    <h1 className="text-3xl font-bold text-center mb-4">Sesión de rehabilitación para brazos</h1>
-                    <p className="text-center text-gray-700 mb-4">
-                        Realiza ejercicios diseñados para mejorar la fuerza y movilidad de los músculos de tus brazos.
-                    </p>
+            <div className="flex w-full max-w-6xl items-center space-x-20">
+                {/* Tutorial */}
+                <div className="bg-gray-600 w-1/4 h-96 rounded-lg shadow-lg flex items-center justify-center">
+                    <p className="text-white font-bold text-lg">Espacio para el tutorial</p>
+                </div>
+                {/* Contenido de la cámara */}
+                <div className="bg-white rounded-lg shadow-lg w-3/4 overflow-hidden">
+                    <video
+                        ref={videoRef}
+                        className="w-full h-full object-cover"
+                        style={{transform: 'scaleX(-1)'}}
+                        autoPlay
+                        playsInline
+                    />
+                    <div className="p-4">
+                        <h1 className="text-3xl font-bold text-center mb-4">Sesión de rehabilitación para brazos</h1>
+                        <p className="text-center text-gray-700 mb-4">
+                            Realiza ejercicios diseñados para mejorar la fuerza y movilidad de los músculos de tus brazos.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
