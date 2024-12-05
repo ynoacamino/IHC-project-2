@@ -11,7 +11,7 @@ import HandExercise1 from './components/page/HandExercise1';
 import HandExercise2 from './components/page/HandExercise2';
 import ArmSession from './components/page/ArmSession';
 import FingerSession from './components/page/FingerSession';
-import Maze from './components/page/Maze';
+//import Maze from './components/page/Maze';
 
 function App() {
   return (
@@ -21,7 +21,6 @@ function App() {
           <Route path="/" element={<MainMenu />} />
           <Route path="/game-options" element={<GameOptions />} />
           <Route path="/canvas" element={<Canvas />} />
-          <Route path="/laberinto" element={<Maze />} />
           <Route path="/videogames" element={<VideoGames />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/rehabilitation" element={<Rehabilitation />} />

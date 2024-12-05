@@ -67,7 +67,7 @@ const HandExercise2: React.FC = () => {
                 <ArrowLeft className="h-8 w-8" />
             </button>
             <h1 className="absolute top-20 left-1/2 transform -translate-x-1/2 text-5xl font-bold text-white text-center mb-4 z-10">
-                Rehabilitación para manos
+                Segundo Ejercicio
             </h1>
             <div className="flex w-full max-w-6xl items-center space-x-20">
                 {/* Tutorial */}
