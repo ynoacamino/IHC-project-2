@@ -7,6 +7,8 @@ import VideoGames from '@/components/page/VideoGames';
 import Rehabilitation from '@/components/page/Rehabilitation';
 import Settings from '@/components/page/Settings';
 import HandSession from './components/page/HandSession';
+import HandExercise1 from './components/page/HandExercise1';
+import HandExercise2 from './components/page/HandExercise2';
 import ArmSession from './components/page/ArmSession';
 import FingerSession from './components/page/FingerSession';
 import Maze from './components/page/Maze';
@@ -24,6 +26,8 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/rehabilitation" element={<Rehabilitation />} />
           <Route path="/hand-session" element={<HandSession />} />
+          <Route path="/hand-exercise-1" element={<HandExercise1 />} />
+          <Route path="/hand-exercise-2" element={<HandExercise2 />} />
           <Route path="/arm-session" element={<ArmSession />} />
           <Route path="/finger-session" element={<FingerSession />} />
         </Routes>
