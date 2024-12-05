@@ -46,8 +46,19 @@ const HandSession: React.FC = () => {
             </button>
             <div className="flex w-full max-w-6xl items-center space-x-20">
                 {/* Tutorial */}
-                <div className="bg-gray-600 w-1/4 h-96 rounded-lg shadow-lg flex items-center justify-center">
-                    <p className="text-white font-bold text-lg">Espacio para el tutorial</p>
+                <div className="bg-gray-600 w-1/4 h-[28rem] rounded-lg shadow-lg p-4 flex flex-col">
+                    <h2 className="text-white font-bold text-xl text-center mb-4">Ejercicios</h2>
+                    <div className="grid grid-rows-3 gap-4 flex-grow">
+                        <div className="bg-gray-700 rounded-lg flex items-center justify-center text-white text-center font-bold text-lg hover:shadow-xl hover:bg-gray-500 transition-all cursor-pointer">
+                            Sección 1
+                        </div>
+                        <div className="bg-gray-700 rounded-lg flex items-center justify-center text-white text-center font-bold text-lg hover:shadow-xl hover:bg-gray-500 transition-all cursor-pointer">
+                            Sección 2
+                        </div>
+                        <div className="bg-gray-700 rounded-lg flex items-center justify-center text-white text-center font-bold text-lg hover:shadow-xl hover:bg-gray-500 transition-all cursor-pointer">
+                            Sección 3
+                        </div>
+                    </div>
                 </div>
 
                 {/* Contenido de la cámara */}
