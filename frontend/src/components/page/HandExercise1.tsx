@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-import Hand1 from '../../assets/images/hand1.png';
-import Hand2 from '../../assets/images/hand2.png';
-import Hand3 from '../../assets/images/hand3.png';
+import HandStep1 from '../../assets/images/hand_ex1_step1.png';
+import HandStep2 from '../../assets/images/hand_ex1_step2.png';
+import HandStep3 from '../../assets/images/hand_ex1_step3.png';
 
 const HandExercise1: React.FC = () => {
     const navigate = useNavigate();
@@ -75,13 +75,13 @@ const HandExercise1: React.FC = () => {
                     <h2 className="text-gray-100 font-bold text-3xl text-center mb-5">P A S O S</h2>
                     <div className="grid grid-rows-3 gap-5 flex-grow">
                         <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
-                            <img src={Hand1} alt="Paso 1" className="w-full h-full object-cover" />
+                            <img src={HandStep1} alt="Paso 1" className="w-full h-full object-cover" />
                         </div>
                         <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
-                            <img src={Hand2} alt="Paso 2" className="w-full h-full object-cover" />
+                            <img src={HandStep2} alt="Paso 2" className="w-full h-full object-cover" />
                         </div>
                         <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
-                            <img src={Hand3} alt="Paso 3" className="w-full h-full object-cover" />
+                            <img src={HandStep3} alt="Paso 3" className="w-full h-full object-cover" />
                         </div>
                     </div>
                 </div>
