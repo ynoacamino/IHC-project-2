@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Hand } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 import Hand1 from '../../assets/images/hand1.png';
 import Hand2 from '../../assets/images/hand2.png';
@@ -9,7 +9,8 @@ import Hand3 from '../../assets/images/hand3.png';
 const HandSession: React.FC = () => {
     const navigate = useNavigate();
     const videoRef = useRef<HTMLVideoElement | null>(null);
-    //const [showText, setShowText] = useState(true);
+    const [text, setText] = useState('¡Hola!');
+    const [showText, setShowText] = useState(true);
 
     useEffect(() => {
         const getCamera = async () => {
@@ -35,10 +36,54 @@ const HandSession: React.FC = () => {
         };
     }, []);
 
-    /*useEffect(() => {
-        const timer = setTimeout(() => setShowText(false), 5000);
-        return () => clearTimeout(timer);
-    }, []);*/
+    useEffect(() => {
+        const timer1 = setTimeout(() => {
+            setShowText(false);
+            setTimeout(() => {
+                setText("Estos ejercicios te ayudarán a reforzar la fuerza en tu muñeca y recuperar la sensibilidad");
+                setShowText(true);
+            }, 500);
+        }, 3000);
+    
+        const timer2 = setTimeout(() => {
+            setShowText(false);
+            setTimeout(() => {
+                setText("A continuación, seguirás los pasos de la parte izquierda de la pantalla");
+                setShowText(true);
+            }, 500);
+        }, 8000);
+    
+        const timer3 = setTimeout(() => {
+            setShowText(false);
+            setTimeout(() => {
+                setText("Sobre la cámara, se dibujará una línea de guía que deberás seguir para cumplir cada paso");
+                setShowText(true);
+            }, 500);
+        }, 12000);
+    
+        const timer4 = setTimeout(() => {
+            setShowText(false);
+            setTimeout(() => {
+                setText("¡Buena suerte!");
+                setShowText(true);
+            }, 500);
+        }, 16000);
+
+        const timer5 = setTimeout(() => {
+            setShowText(false);
+            setTimeout(() => {
+                setText("");
+            }, 500);
+        }, 19000);
+    
+        return () => {
+            clearTimeout(timer1);
+            clearTimeout(timer2);
+            clearTimeout(timer3);
+            clearTimeout(timer4);
+            clearTimeout(timer5);
+        };
+    }, []);
 
     return (
         <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
@@ -54,15 +99,15 @@ const HandSession: React.FC = () => {
             <div className="flex w-full max-w-6xl items-center space-x-20">
                 {/* Tutorial */}
                 <div className="bg-gray-700 w-1/4 h-[36rem] rounded-lg shadow-lg p-6 flex flex-col">
-                    <h2 className="text-gray-100 font-bold text-4xl text-center mb-5">P A S O S</h2>
+                    <h2 className="text-gray-100 font-bold text-3xl text-center mb-5">P A S O S</h2>
                     <div className="grid grid-rows-3 gap-5 flex-grow">
-                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75">
+                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
                             <img src={Hand1} alt="Paso 1" className="w-full h-full object-cover" />
                         </div>
-                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75">
+                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
                             <img src={Hand2} alt="Paso 2" className="w-full h-full object-cover" />
                         </div>
-                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75">
+                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
                             <img src={Hand3} alt="Paso 3" className="w-full h-full object-cover" />
                         </div>
                     </div>
@@ -77,10 +122,37 @@ const HandSession: React.FC = () => {
                         autoPlay
                         playsInline
                     />
-                    <div className="absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center bg-black bg-opacity-50 p-4">
-                        <h1 className="text-6xl font-bold text-white text-center mb-4">¡Hola!</h1>
-                    </div>
+                    {text && (
+                        <div className="absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center bg-black bg-opacity-50 p-4">
+                            <h1
+                                className={`text-5xl font-bold text-white text-center mb-4 transition-opacity duration-500 ${
+                                    showText ? 'opacity-100' : 'opacity-0'
+                                }`}
+                            >
+                                {text}
+                            </h1>
+                        </div>
+                    )}
                 </div>
+            </div>
+
+            {/* Botones para Ejercicio */}
+            <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+                {/* Botón Ejercicio 1 */}
+                <button className="px-6 py-2 rounded-full bg-green-600 text-white font-semibold text-lg hover:bg-green-700 transition-colors">
+                    Ejercicio 1
+                </button>
+
+                {/* Circulitos de separación */}
+                <div className="flex items-center space-x-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
+                </div>
+
+                {/* Botón Ejercicio 2 */}
+                <button className="px-6 py-2 rounded-full bg-gray-600 text-white font-semibold text-lg hover:bg-gray-700 transition-colors">
+                    Ejercicio 2
+                </button>
             </div>
         </div>
     );
