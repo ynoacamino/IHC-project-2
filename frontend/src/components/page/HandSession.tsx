@@ -101,13 +101,13 @@ const HandSession: React.FC = () => {
                 <div className="bg-gray-700 w-1/4 h-[36rem] rounded-lg shadow-lg p-6 flex flex-col">
                     <h2 className="text-gray-100 font-bold text-3xl text-center mb-5">P A S O S</h2>
                     <div className="grid grid-rows-3 gap-5 flex-grow">
-                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75">
+                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
                             <img src={Hand1} alt="Paso 1" className="w-full h-full object-cover" />
                         </div>
-                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75">
+                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
                             <img src={Hand2} alt="Paso 2" className="w-full h-full object-cover" />
                         </div>
-                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75">
+                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
                             <img src={Hand3} alt="Paso 3" className="w-full h-full object-cover" />
                         </div>
                     </div>
