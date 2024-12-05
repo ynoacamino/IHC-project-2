@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Hand } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 import Hand1 from '../../assets/images/hand1.png';
 import Hand2 from '../../assets/images/hand2.png';
@@ -134,6 +134,25 @@ const HandSession: React.FC = () => {
                         </div>
                     )}
                 </div>
+            </div>
+
+            {/* Botones para Ejercicio */}
+            <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+                {/* Botón Ejercicio 1 */}
+                <button className="px-6 py-2 rounded-full bg-green-600 text-white font-semibold text-lg hover:bg-green-700 transition-colors">
+                    Ejercicio 1
+                </button>
+
+                {/* Circulitos de separación */}
+                <div className="flex items-center space-x-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
+                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
+                </div>
+
+                {/* Botón Ejercicio 2 */}
+                <button className="px-6 py-2 rounded-full bg-gray-600 text-white font-semibold text-lg hover:bg-gray-700 transition-colors">
+                    Ejercicio 2
+                </button>
             </div>
         </div>
     );
