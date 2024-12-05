@@ -150,22 +150,22 @@ const HandSession: React.FC = () => {
             <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
                 <button 
                     onClick={() => navigate('/hand-exercise-1')}
-                    className="px-6 py-2 rounded-full bg-gray-600 text-white font-semibold text-lg hover:bg-gray-700 transition-colors"
+                    className="px-9 py-5 rounded-full bg-gray-600 text-white font-semibold text-2xl hover:bg-gray-700 transition-colors"
                 >
                     Ejercicio 1
                 </button>
 
                 {/* Circulitos de separación */}
-                <div className="flex items-center space-x-2">
-                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
-                    <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
+                <div className="flex items-center space-x-4">
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
                 </div>
 
                 <button 
                     onClick={() => navigate('/hand-exercise-2')}
-                    className="px-6 py-2 rounded-full bg-gray-600 text-white font-semibold text-lg hover:bg-gray-700 transition-colors"
+                    className="px-9 py-5 rounded-full bg-gray-600 text-white font-semibold text-2xl hover:bg-gray-700 transition-colors"
                 >
                     Ejercicio 2
                 </button>
