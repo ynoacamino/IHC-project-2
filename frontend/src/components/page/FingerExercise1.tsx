@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
-import HandStep1 from '../../assets/images/hand_ex2_step1.png';
-import HandStep2 from '../../assets/images/hand_ex2_step2.png';
-import HandStep3 from '../../assets/images/hand_ex2_step3.png';
+import FingerStep1 from '../../assets/images/finger_ex1_step1.png';
+import FingerStep2 from '../../assets/images/finger_ex1_step2.png';
 
-const HandExercise2: React.FC = () => {
+const FingerExercise1: React.FC = () => {
     const navigate = useNavigate();
     const videoRef = useRef<HTMLVideoElement | null>(null);
-    const [text, setText] = useState('¡Ejercicio 2!');
+    const [text, setText] = useState('¡Ejercicio 1!');
     const [showText, setShowText] = useState(true);
 
     useEffect(() => {
@@ -59,29 +58,26 @@ const HandExercise2: React.FC = () => {
     }, []);
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
+        <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900">
             <button
-                onClick={() => navigate('/hand-session')}
-                className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
+                onClick={() => navigate('/finger-session')}
+                className="absolute top-4 left-4 text-white hover:text-blue-400 transition-colors"
             >
                 <ArrowLeft className="h-8 w-8" />
             </button>
             <h1 className="absolute top-20 left-1/2 transform -translate-x-1/2 text-5xl font-bold text-white text-center mb-4 z-10">
-                Segundo Ejercicio
+                Primer Ejercicio de Dedos
             </h1>
             <div className="flex w-full max-w-6xl items-center space-x-20">
                 {/* Tutorial */}
                 <div className="bg-gray-700 w-1/4 h-[36rem] rounded-lg shadow-lg p-6 flex flex-col">
                     <h2 className="text-gray-100 font-bold text-3xl text-center mb-5">P A S O S</h2>
-                    <div className="grid grid-rows-3 gap-5 flex-grow">
+                    <div className="grid grid-rows-2 gap-5 flex-grow">
                         <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
-                            <img src={HandStep1} alt="Paso 1" className="w-full h-full object-cover" />
+                            <img src={FingerStep1} alt="Paso 1" className="w-full h-full object-cover" />
                         </div>
                         <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
-                            <img src={HandStep2} alt="Paso 2" className="w-full h-full object-cover" />
-                        </div>
-                        <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
-                            <img src={HandStep3} alt="Paso 3" className="w-full h-full object-cover" />
+                            <img src={FingerStep2} alt="Paso 2" className="w-full h-full object-cover" />
                         </div>
                     </div>
                 </div>
@@ -111,32 +107,21 @@ const HandExercise2: React.FC = () => {
 
             {/* Botones para Ejercicio */}
             <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
-                {/* Botón Ejercicio 1 */}
                 <button 
-                    onClick={() => navigate('/hand-exercise-1')}
-                    className="px-9 py-5 rounded-full bg-gray-600 text-white font-semibold text-2xl hover:bg-gray-700 transition-colors"
-                >
-                    Ejercicio 1
-                </button>
-
-                {/* Circulitos de separación */}
-                <div className="flex items-center space-x-2">
-                    <div className="w-4 h-4 rounded-full bg-white"></div>
-                    <div className="w-4 h-4 rounded-full bg-white"></div>
-                    <div className="w-4 h-4 rounded-full bg-white"></div>
-                    <div className="w-4 h-4 rounded-full bg-white"></div>
-                </div>
-
-                {/* Botón Ejercicio 2 */}
-                <button 
-                    onClick={() => navigate('/hand-exercise-2')}
+                    onClick={() => navigate('/finger-exercise-1')}
                     className="px-9 py-5 rounded-full bg-green-600 text-white font-semibold text-2xl hover:bg-green-700 transition-colors"
                 >
-                    Ejercicio 2
+                    Repetir Ejercicio
+                </button>
+                <button 
+                    onClick={() => navigate('/finger-session')}
+                    className="px-9 py-5 rounded-full bg-gray-600 text-white font-semibold text-2xl hover:bg-gray-700 transition-colors"
+                >
+                    Volver a Sesión
                 </button>
             </div>
         </div>
     );
 };
 
-export default HandExercise2;
+export default FingerExercise1;
