@@ -70,7 +70,7 @@ const FingerExercise1: React.FC = () => {
             </h1>
             <div className="flex w-full max-w-6xl items-center space-x-20">
                 {/* Tutorial */}
-                <div className="bg-gray-700 w-1/4 h-[36rem] rounded-lg shadow-lg p-6 flex flex-col">
+                <div className="bg-gray-700 w-1/4 h-[27rem] rounded-lg shadow-lg p-6 flex flex-col">
                     <h2 className="text-gray-100 font-bold text-3xl text-center mb-5">P A S O S</h2>
                     <div className="grid grid-rows-2 gap-5 flex-grow">
                         <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
@@ -107,17 +107,28 @@ const FingerExercise1: React.FC = () => {
 
             {/* Botones para Ejercicio */}
             <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 flex items-center space-x-4">
+                {/* Botón Ejercicio 1 */}
                 <button 
                     onClick={() => navigate('/finger-exercise-1')}
                     className="px-9 py-5 rounded-full bg-green-600 text-white font-semibold text-2xl hover:bg-green-700 transition-colors"
                 >
-                    Repetir Ejercicio
+                    Ejercicio 1
                 </button>
+
+                {/* Circulitos de separación */}
+                <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
+                    <div className="w-4 h-4 rounded-full bg-white"></div>
+                </div>
+
+                {/* Botón Ejercicio 2 */}
                 <button 
-                    onClick={() => navigate('/finger-session')}
+                    onClick={() => navigate('/finger-exercise-2')}
                     className="px-9 py-5 rounded-full bg-gray-600 text-white font-semibold text-2xl hover:bg-gray-700 transition-colors"
                 >
-                    Volver a Sesión
+                    Ejercicio 2
                 </button>
             </div>
         </div>
