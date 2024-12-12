@@ -12,6 +12,7 @@ import HandExercise2 from './components/page/HandExercise2';
 import ArmSession from './components/page/ArmSession';
 import FingerSession from './components/page/FingerSession';
 import FingerExercise1 from './components/page/FingerExercise1';
+import FingerExercise2 from './components/page/FingerExercise2';
 import Maze from './components/page/Maze';
 
 function App() {
@@ -30,7 +31,8 @@ function App() {
           <Route path="/hand-exercise-2" element={<HandExercise2 />} />
           <Route path="/arm-session" element={<ArmSession />} />
           <Route path="/finger-session" element={<FingerSession />} />
-          <Route path="/finger-exercise-1" element={<FingerExercise1 />} />	
+          <Route path="/finger-exercise-1" element={<FingerExercise1 />} />
+          <Route path="/finger-exercise-2" element={<FingerExercise2 />} />
         </Routes>
       </div>
     </HashRouter>
