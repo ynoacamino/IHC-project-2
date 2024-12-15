@@ -18,7 +18,8 @@ module.exports = {
     "react/require-default-props": 0,
     "react/jsx-props-no-spreading": 0,
     "react-refresh/only-export-components": 0,
-    "react/jsx-no-bind": 0
+    "react/jsx-no-bind": 0,
+    "no-console": 0
   },
   parserOptions: {
     project: './tsconfig.json'

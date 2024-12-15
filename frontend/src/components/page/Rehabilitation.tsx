@@ -1,8 +1,12 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Hand, Pointer, BicepsFlexed } from 'lucide-react';
+import {
+  ArrowLeft, Hand, Pointer,
+} from 'lucide-react';
 
-const Rehabilitation = () => {
+function Rehabilitation() {
   const navigate = useNavigate();
 
   return (
@@ -10,16 +14,17 @@ const Rehabilitation = () => {
       <button
         onClick={() => navigate('/game-options')}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
+        type="button"
       >
         <ArrowLeft className="h-8 w-8" />
       </button>
       <div className="text-center w-full max-w-7xl ">
         <h1 className="text-6xl font-bold text-white mb-8">Rehabilitación</h1>
-        
+
         <div className="grid grid-cols-2 gap-10 w-11/12 mx-auto">
           {/* Sección de la mano */}
-          <div 
-            className="bg-green-600 rounded-lg p-6 cursor-pointer hover:bg-green-700 transition-colors transform hover:scale-105 transition-transform w-full"
+          <div
+            className="bg-green-600 rounded-lg p-6 cursor-pointer hover:bg-green-700 transition-colors transform hover:scale-105 w-full"
             onClick={() => navigate('/hand-session')}
           >
             <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center">
@@ -34,26 +39,8 @@ const Rehabilitation = () => {
             />
           </div>
 
-          {/* Sección del brazo 
-          <div 
-            className="bg-blue-600 rounded-lg p-6 cursor-pointer hover:bg-blue-700 transition-colors transform hover:scale-105 transition-transform w-full"
-            onClick={() => navigate('/arm-session')}
-          >
-            <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center">
-              <BicepsFlexed className="mr-2" />
-              BRAZOS
-            </h2>
-            <p className="text-gray-200 mb-4">Participa en ejercicios diseñados para fortalecer los músculos del brazo.</p>
-            <img
-              src="https://cdn-icons-png.freepik.com/512/5018/5018063.png"
-              alt="Brazo"
-              className="w-44 h-44 mx-auto"
-            />
-          </div>*/}
-
-          {/* Sección de los dedos */}
-          <div 
-            className="bg-yellow-600 rounded-lg p-6 cursor-pointer hover:bg-yellow-700 transition-colors transform hover:scale-105 transition-transform w-full"
+          <div
+            className="bg-yellow-600 rounded-lg p-6 cursor-pointer hover:bg-yellow-700 transition-colors transform hover:scale-105 w-full"
             onClick={() => navigate('/finger-session')}
           >
             <h2 className="text-2xl font-bold text-white mb-4 flex items-center justify-center">
@@ -71,6 +58,6 @@ const Rehabilitation = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Rehabilitation;

@@ -1,7 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from "lucide-react";
-import Modal from "./Modal";
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable jsx-a11y/media-has-caption */
+import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+  ArrowLeft,
+} from 'lucide-react';
+import Modal from './Modal';
 
 const gridSize = 7;
 
@@ -25,7 +30,7 @@ const mazeGrid = [
   [false, true, true, true, true, true, true],
 ];
 
-const Maze = () => {
+function Maze() {
   const navigate = useNavigate();
   const [position, setPosition] = useState<Position>(initialPosition);
   const [showModal, setShowModal] = useState(false);
@@ -35,23 +40,23 @@ const Maze = () => {
   const streamRef = useRef<MediaStream | null>(null);
 
   // Movimiento del jugador basado en dirección
-  const movePlayer = (direction: "up" | "down" | "left" | "right") => {
+  const movePlayer = (direction: 'up' | 'down' | 'left' | 'right') => {
     const { x, y } = position;
 
     let newCol = x;
     let newRow = y;
 
-    if (direction === "up") newRow--;
-    else if (direction === "down") newRow++;
-    else if (direction === "left") newCol--;
-    else if (direction === "right") newCol++;
+    if (direction === 'up') newRow -= 1;
+    else if (direction === 'down') newRow += 1;
+    else if (direction === 'left') newCol -= 1;
+    else if (direction === 'right') newCol += 1;
 
     if (
-      newCol >= 0 &&
-      newCol < gridSize &&
-      newRow >= 0 &&
-      newRow < gridSize &&
-      !mazeGrid[newRow][newCol]
+      newCol >= 0
+      && newCol < gridSize
+      && newRow >= 0
+      && newRow < gridSize
+      && !mazeGrid[newRow][newCol]
     ) {
       setPosition({ x: newCol, y: newRow });
     }
@@ -59,8 +64,8 @@ const Maze = () => {
 
   // Detecta colores y realiza el movimiento
   const detectColorAndMove = (ctx: CanvasRenderingContext2D) => {
-    const width = canvasRef.current!.width;
-    const height = canvasRef.current!.height;
+    const { width } = (canvasRef.current!);
+    const { height } = (canvasRef.current!);
 
     const frame = ctx.getImageData(0, 0, width, height);
     const { data } = frame;
@@ -81,7 +86,7 @@ const Maze = () => {
 
         sumX += x;
         sumY += y;
-        pixelCount++;
+        pixelCount += 1;
       }
     }
 
@@ -92,7 +97,7 @@ const Maze = () => {
       // Dibujar el círculo de reconocimiento
       ctx.beginPath();
       ctx.arc(centerX, centerY, 10, 0, Math.PI * 2);
-      ctx.strokeStyle = "black";
+      ctx.strokeStyle = 'black';
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -100,10 +105,10 @@ const Maze = () => {
       const horizontalThreshold = width / 3;
       const verticalThreshold = height / 3;
 
-      if (centerY < verticalThreshold) movePlayer("up");
-      else if (centerY > 2 * verticalThreshold) movePlayer("down");
-      else if (centerX < horizontalThreshold) movePlayer("left");
-      else if (centerX > 2 * horizontalThreshold) movePlayer("right");
+      if (centerY < verticalThreshold) movePlayer('up');
+      else if (centerY > 2 * verticalThreshold) movePlayer('down');
+      else if (centerX < horizontalThreshold) movePlayer('left');
+      else if (centerX > 2 * horizontalThreshold) movePlayer('right');
     }
   };
 
@@ -119,7 +124,7 @@ const Maze = () => {
           videoRef.current.play();
 
           if (canvasRef.current) {
-            const ctx = canvasRef.current.getContext("2d");
+            const ctx = canvasRef.current.getContext('2d');
 
             if (ctx) {
               setInterval(() => {
@@ -132,7 +137,7 @@ const Maze = () => {
                   0,
                   0,
                   canvasRef.current!.width,
-                  canvasRef.current!.height
+                  canvasRef.current!.height,
                 );
                 ctx.restore();
                 detectColorAndMove(ctx); // Detección de movimiento
@@ -141,7 +146,7 @@ const Maze = () => {
           }
         }
       } catch (error) {
-        console.error("Error accessing camera:", error);
+        console.error('Error accessing camera:', error);
       }
     };
 
@@ -164,8 +169,9 @@ const Maze = () => {
   return (
     <div className="min-h-screen p-4 bg-gray-900 text-white">
       <button
-        onClick={() => navigate("/game-options")}
+        onClick={() => navigate('/game-options')}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
+        type="button"
       >
         <ArrowLeft className="h-8 w-8" />
       </button>
@@ -177,30 +183,28 @@ const Maze = () => {
       <div className="flex flex-col md:flex-row w-[100%]">
         <div className="mx-auto w-[100%] md:w-[40%] h-auto bg-slate-50 p-3 flex flex-col justify-center items-center rounded-md">
           <div className="w-[70%] md:w-[90%] h-auto grid grid-cols-7 gap-2 justify-center items-center rounded-sm">
-            {mazeGrid.map((row, rowIndex) =>
-              row.map((cell, cellIndex) => {
-                const isPlayer = position.y === rowIndex && position.x === cellIndex;
+            {mazeGrid.map((row, rowIndex) => row.map((cell, cellIndex) => {
+              const isPlayer = position.y === rowIndex && position.x === cellIndex;
 
-                return (
-                  <div
-                    key={`${rowIndex},${cellIndex}`}
-                    className={`w/7 h-16 flex justify-center items-center rounded-sm shadow-md ${cell ? "bg-" : "bg-white"}`}
-                    style={{
-                      backgroundColor: isPlayer ? "#4ADE80" : cell ? "#1F2937" : "#F3F4F9",
-                    }}
-                  >
-                    {isPlayer && <div className="grid center w-1/2 h-1/2 rounded-full bg-blue-500" />}
-                  </div>
-                );
-              })
-            )}
+              return (
+                <div
+                  key={`${rowIndex},${cellIndex}`}
+                  className={`w/7 h-16 flex justify-center items-center rounded-sm shadow-md ${cell ? 'bg-' : 'bg-white'}`}
+                  style={{
+                    backgroundColor: isPlayer ? '#4ADE80' : cell ? '#1F2937' : '#F3F4F9',
+                  }}
+                >
+                  {isPlayer && <div className="grid center w-1/2 h-1/2 rounded-full bg-blue-500" />}
+                </div>
+              );
+            }))}
           </div>
         </div>
 
         <div className="flex justify-center flex-row w-full md:w-1/2 md:flex-col">
           <div className="flex justify-center mt-2">
             <video ref={videoRef} className="hidden" autoPlay playsInline />
-            <canvas ref={canvasRef} width="600" height="500" className="border-2 border-gray-500 rounded-lg"></canvas>
+            <canvas ref={canvasRef} width="600" height="500" className="border-2 border-gray-500 rounded-lg" />
           </div>
         </div>
       </div>
@@ -217,15 +221,16 @@ const Maze = () => {
               setPosition(initialPosition);
               setShowModal(false);
             }}
+            type="button"
             className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
           >
             Try Again
           </button>
-          
+
         </div>
       </Modal>
     </div>
   );
-};
+}
 
 export default Maze;

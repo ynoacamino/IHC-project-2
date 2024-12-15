@@ -25,6 +25,7 @@ function App() {
           <Route path="/canvas" element={<Canvas />} />
           <Route path="/videogames" element={<VideoGames />} />
           <Route path="/settings" element={<Settings />} />
+          <Route path="/laberinto" element={<Maze />} />
           <Route path="/rehabilitation" element={<Rehabilitation />} />
           <Route path="/hand-session" element={<HandSession />} />
           <Route path="/hand-exercise-1" element={<HandExercise1 />} />

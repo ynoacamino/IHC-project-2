@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/media-has-caption */
+/* eslint-disable consistent-return */
 import React, { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
@@ -72,7 +74,7 @@ function Settings() {
       ctx.drawImage(video, 0, 0, processWidth, processHeight);
 
       const frame = ctx.getImageData(0, 0, processWidth, processHeight);
-      const data = frame.data;
+      const { data } = frame;
 
       // Procesar los píxeles
       for (let i = 0; i < data.length; i += 4) {
@@ -80,10 +82,9 @@ function Settings() {
         const g = data[i + 1];
         const b = data[i + 2];
 
-        const isWithinThreshold =
-          Math.abs(r - red) <= threshold &&
-          Math.abs(g - green) <= threshold &&
-          Math.abs(b - blue) <= threshold;
+        const isWithinThreshold = Math.abs(r - red) <= threshold
+          && Math.abs(g - green) <= threshold
+          && Math.abs(b - blue) <= threshold;
 
         if (isWithinThreshold) {
           // Blanco
@@ -113,14 +114,16 @@ function Settings() {
     processFrame(0);
   }, [red, green, blue, threshold, streaming]);
 
-  const handleRedChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
-    setRed(Number(event.target.value));
-  const handleGreenChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
-    setGreen(Number(event.target.value));
-  const handleBlueChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
-    setBlue(Number(event.target.value));
-  const handleThresholdChange: React.ChangeEventHandler<HTMLInputElement> = (event) =>
-    setThreshold(Number(event.target.value));
+  const handleRedChange
+  : React.ChangeEventHandler<HTMLInputElement> = (event) => setRed(Number(event.target.value));
+  const handleGreenChange
+  : React.ChangeEventHandler<HTMLInputElement> = (event) => setGreen(Number(event.target.value));
+  const handleBlueChange
+  : React.ChangeEventHandler<HTMLInputElement> = (event) => setBlue(Number(event.target.value));
+  const handleThresholdChange
+  : React.ChangeEventHandler<
+  HTMLInputElement
+  > = (event) => setThreshold(Number(event.target.value));
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">

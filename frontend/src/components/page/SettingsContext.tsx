@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { createContext, useContext, useState } from 'react';
 
 // Definir la forma de los datos que gestionará el contexto
@@ -11,14 +12,15 @@ interface SettingsContextType {
   setGreen: (value: number) => void;
   setBlue: (value: number) => void;
   setThreshold: (value: number) => void;
-  generateBlackAndWhitePreview: (frameData: Uint8ClampedArray, width: number, height: number) => Uint8ClampedArray;
+  generateBlackAndWhitePreview:
+  (frameData: Uint8ClampedArray, width: number, height: number) => Uint8ClampedArray;
 }
 
 // Crear el contexto
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 
 // Crear el proveedor
-export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [red, setRed] = useState(0);
   const [green, setGreen] = useState(0);
   const [blue, setBlue] = useState(0);
@@ -29,8 +31,6 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Función para generar una vista en blanco y negro basada en el color seleccionado y el umbral
   const generateBlackAndWhitePreview = (
     frameData: Uint8ClampedArray,
-    width: number,
-    height: number
   ): Uint8ClampedArray => {
     const output = new Uint8ClampedArray(frameData.length);
 
@@ -41,7 +41,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
       // Calcular la diferencia entre el color actual y el color seleccionado
       const colorDistance = Math.sqrt(
-        Math.pow(r - red, 2) + Math.pow(g - green, 2) + Math.pow(b - blue, 2)
+        (r - red) ** 2 + (g - green) ** 2 + (b - blue) ** 2,
       );
 
       if (colorDistance <= threshold) {
@@ -80,7 +80,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       {children}
     </SettingsContext.Provider>
   );
-};
+}
 
 // Crear un hook para usar el contexto fácilmente
 export const useSettings = () => {
