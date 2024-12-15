@@ -272,7 +272,7 @@ function Canvas() {
               drawBlueArea(ctx);
               drawPurpleArea(ctx);
               drawBlackArea(ctx);
-            }, 100);
+            }, 500);
           };
         }
       } catch (error) {

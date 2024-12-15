@@ -7,6 +7,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import Modal from './Modal';
+import { useSettings } from './SettingsContext';
 
 const gridSize = 7;
 
@@ -20,14 +21,22 @@ const initialPosition: Position = {
   y: 6,
 };
 
+enum Direction {
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+  NULL,
+}
+
 const mazeGrid = [
   [true, true, true, true, true, true, false],
   [true, false, false, false, true, false, false],
   [true, false, true, false, true, false, true],
   [true, false, true, false, false, false, true],
-  [true, false, true, true, true, false, true],
-  [false, false, false, false, false, false, true],
-  [false, true, true, true, true, true, true],
+  [false, true, true, true, true, false, true],
+  [false, false, true, false, false, false, true],
+  [false, false, false, true, true, true, true],
 ];
 
 function Maze() {
@@ -37,19 +46,26 @@ function Maze() {
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
 
+  // const [lastMove, setLastMove] = useState<Direction>(Direction.DOWN);
+  const lastMove = useRef<Direction>(Direction.NULL);
+
+  const lastPositionRef = useRef({ x: 0, y: 0 });
+
   // Movimiento del jugador basado en dirección
-  const movePlayer = (direction: 'up' | 'down' | 'left' | 'right') => {
+  const movePlayer = (direction: Direction) => {
     const { x, y } = position;
+    console.log(direction, { x, y });
 
     let newCol = x;
     let newRow = y;
 
-    if (direction === 'up') newRow -= 1;
-    else if (direction === 'down') newRow += 1;
-    else if (direction === 'left') newCol -= 1;
-    else if (direction === 'right') newCol += 1;
+    if (direction === Direction.UP) newRow -= 1;
+    else if (direction === Direction.DOWN) newRow += 1;
+    else if (direction === Direction.LEFT) newCol -= 1;
+    else if (direction === Direction.RIGHT) newCol += 1;
 
     if (
       newCol >= 0
@@ -62,53 +78,140 @@ function Maze() {
     }
   };
 
-  // Detecta colores y realiza el movimiento
-  const detectColorAndMove = (ctx: CanvasRenderingContext2D) => {
-    const { width } = (canvasRef.current!);
-    const { height } = (canvasRef.current!);
+  const { red, green, blue } = useSettings();
 
+  const CANVAS_WIDTH = 600;
+  const CANVAS_HEIGHT = 500;
+
+  const W_1_BOX = 300;
+  const W_2_BOX = 80;
+
+  const H_1_BOX = 80;
+  const H_2_BOX = 300;
+
+  const SIZES_BOXES = [
+    {
+      x: (CANVAS_WIDTH - W_1_BOX) / 2,
+      y: CANVAS_HEIGHT - ((CANVAS_HEIGHT - (H_2_BOX + H_1_BOX * 2)) / 2) - H_1_BOX,
+      width: W_1_BOX,
+      height: H_1_BOX,
+      direction: Direction.DOWN,
+    },
+    {
+      x: (CANVAS_WIDTH - W_1_BOX) / 2,
+      y: (CANVAS_HEIGHT - (H_2_BOX + H_1_BOX * 2)) / 2,
+      width: W_1_BOX,
+      height: H_1_BOX,
+      direction: Direction.UP,
+    },
+    {
+      x: CANVAS_WIDTH - ((CANVAS_WIDTH - (W_1_BOX + 2 * W_2_BOX)) / 2) - W_2_BOX,
+      y: 100,
+      width: W_2_BOX,
+      height: H_2_BOX,
+      direction: Direction.RIGHT,
+    },
+    {
+      x: (CANVAS_WIDTH - (W_1_BOX + 2 * W_2_BOX)) / 2,
+      y: 100,
+      width: W_2_BOX,
+      height: H_2_BOX,
+      direction: Direction.LEFT,
+    },
+  ];
+
+  const createBotton = (createBottonProps: {
+    ctx: CanvasRenderingContext2D
+    x: number
+    y: number
+    width: number
+    height: number
+  }) => {
+    const { ctx } = createBottonProps;
+
+    ctx.strokeStyle = 'black'; // Borde negro
+    ctx.lineWidth = 2; // Grosor del borde
+    ctx.fillStyle = 'rgba(180, 180, 180, 0.4)'; // Fondo blanco transparente
+
+    ctx.beginPath();
+    ctx.roundRect(
+      createBottonProps.x,
+      createBottonProps.y,
+      createBottonProps.width,
+      createBottonProps.height,
+      10,
+    );
+    ctx.fill(); // Rellena el fondo transparente
+    ctx.stroke(); // Dibuja el borde
+  };
+
+  const createBottons = () => {
+    const ctx = drawingCanvasRef.current?.getContext('2d') as CanvasRenderingContext2D;
+
+    SIZES_BOXES.forEach((s) => createBotton({ ctx, ...s }));
+  };
+
+  const detectColor = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
     const frame = ctx.getImageData(0, 0, width, height);
     const { data } = frame;
-
-    let sumX = 0;
-    let sumY = 0;
-    let pixelCount = 0;
+    const detectedPixels = [];
 
     for (let i = 0; i < data.length; i += 4) {
       const r = data[i];
       const g = data[i + 1];
       const b = data[i + 2];
 
-      // Detección de color específico (rojo)
-      if (r > 200 && g < 180 && b < 150) {
+      // Comparar el color con los valores de SettingsContext
+      if (Math.abs(r - red) < 30 && Math.abs(g - green) < 30 && Math.abs(b - blue) < 30) {
         const x = (i / 4) % width;
-        const y = Math.floor(i / 4 / width);
-
-        sumX += x;
-        sumY += y;
-        pixelCount += 1;
+        const y = Math.floor((i / 4) / width);
+        detectedPixels.push({ x, y });
       }
     }
 
-    if (pixelCount > 0) {
-      const centerX = sumX / pixelCount;
-      const centerY = sumY / pixelCount;
+    if (detectedPixels.length > 0) {
+      const centerX = detectedPixels
+        .reduce((sum, pixel) => sum + pixel.x, 0) / detectedPixels.length;
+      const centerY = detectedPixels
+        .reduce((sum, pixel) => sum + pixel.y, 0) / detectedPixels.length;
 
-      // Dibujar el círculo de reconocimiento
+      const area = detectedPixels.length;
+      const radius = Math.sqrt(area / Math.PI) * 1.3;
+
       ctx.beginPath();
-      ctx.arc(centerX, centerY, 10, 0, Math.PI * 2);
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
       ctx.strokeStyle = 'black';
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Determinar el movimiento basado en la posición del círculo
-      const horizontalThreshold = width / 3;
-      const verticalThreshold = height / 3;
+      lastPositionRef.current = { x: centerX, y: centerY };
 
-      if (centerY < verticalThreshold) movePlayer('up');
-      else if (centerY > 2 * verticalThreshold) movePlayer('down');
-      else if (centerX < horizontalThreshold) movePlayer('left');
-      else if (centerX > 2 * horizontalThreshold) movePlayer('right');
+      const matchDirection = SIZES_BOXES.find((s) => (
+        s.x <= centerX
+        && centerX <= s.x + s.width
+        && s.y <= centerY
+        && centerY <= s.y + s.height
+      ));
+
+      if (matchDirection && lastMove.current !== matchDirection.direction) {
+        movePlayer(matchDirection.direction);
+        if (matchDirection.direction === Direction.UP) {
+          console.log('UP');
+        }
+        if (matchDirection.direction === Direction.DOWN) {
+          console.log('DOWN');
+        }
+        if (matchDirection.direction === Direction.LEFT) {
+          console.log('LEFT');
+        }
+        if (matchDirection.direction === Direction.RIGHT) {
+          console.log('RIGHT');
+        }
+        lastMove.current = matchDirection.direction;
+      }
+      if (!matchDirection && lastMove.current !== Direction.NULL) {
+        lastMove.current = Direction.NULL;
+      }
     }
   };
 
@@ -140,8 +243,8 @@ function Maze() {
                   canvasRef.current!.height,
                 );
                 ctx.restore();
-                detectColorAndMove(ctx); // Detección de movimiento
-              }, 100);
+                detectColor(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
+              }, 300);
             }
           }
         }
@@ -151,6 +254,7 @@ function Maze() {
     };
 
     setupCamera();
+    createBottons();
 
     return () => {
       if (streamRef.current) {
@@ -175,6 +279,21 @@ function Maze() {
       >
         <ArrowLeft className="h-8 w-8" />
       </button>
+
+      <div className="absolute top-4 left-40 ">
+        <button type="button" onClick={() => movePlayer(Direction.UP)}>
+          UP
+        </button>
+        <button type="button" onClick={() => movePlayer(Direction.DOWN)}>
+          DOWN
+        </button>
+        <button type="button" onClick={() => movePlayer(Direction.LEFT)}>
+          LEFT
+        </button>
+        <button type="button" onClick={() => movePlayer(Direction.RIGHT)}>
+          RIGHT
+        </button>
+      </div>
 
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-8">Maze</h1>
@@ -202,9 +321,15 @@ function Maze() {
         </div>
 
         <div className="flex justify-center flex-row w-full md:w-1/2 md:flex-col">
-          <div className="flex justify-center mt-2">
+          <div className="flex justify-center mt-2 relative">
             <video ref={videoRef} className="hidden" autoPlay playsInline />
             <canvas ref={canvasRef} width="600" height="500" className="border-2 border-gray-500 rounded-lg" />
+            <canvas
+              ref={drawingCanvasRef}
+              className="absolute top-0 left-0 w-full h-full"
+              width="600"
+              height="500"
+            />
           </div>
         </div>
       </div>
