@@ -9,16 +9,9 @@ import {
 import Modal from './Modal';
 import { useSettings } from './SettingsContext';
 
-const gridSize = 7;
-
 type Position = {
   x: number;
   y: number;
-};
-
-const initialPosition: Position = {
-  x: 0,
-  y: 6,
 };
 
 enum Direction {
@@ -29,53 +22,73 @@ enum Direction {
   NULL,
 }
 
-const mazeGrid = [
-  [true, true, true, true, true, true, false],
-  [true, false, false, false, true, false, false],
-  [true, false, true, false, true, false, true],
-  [true, false, true, false, false, false, true],
-  [false, true, true, true, true, false, true],
-  [false, false, true, false, false, false, true],
-  [false, false, false, true, true, true, true],
-];
+const gridSizeX = 12; // Tamaño del laberinto
+const gridSizeY = 10; // Tamaño del laberinto
+const cellSize = 60; // Tamaño de cada celda en píxeles
+
+const initialPosition: Position = {
+  x: 0,
+  y: gridSizeY - 1,
+};
 
 function Maze() {
   const navigate = useNavigate();
-  const [position, setPosition] = useState<Position>(initialPosition);
   const [showModal, setShowModal] = useState(false);
+  const [position, setPosition] = useState<Position>(initialPosition);
+  const [mazeGrid] = useState([
+    // Ejemplo de un laberinto
+    [0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 1, 0, 1, 1, 1, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0],
+    [0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+    [0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+  ]);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawingCanvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const mazeRef = useRef<HTMLCanvasElement>(null);
 
-  // const [lastMove, setLastMove] = useState<Direction>(Direction.DOWN);
-  const lastMove = useRef<Direction>(Direction.NULL);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [lastMove, setLastMove] = useState<Direction>(Direction.NULL);
 
-  const lastPositionRef = useRef({ x: 0, y: 0 });
+  const drawMaze = () => {
+    const canvas = mazeRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-  // Movimiento del jugador basado en dirección
-  const movePlayer = (direction: Direction) => {
-    const { x, y } = position;
-    console.log(direction, { x, y });
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    let newCol = x;
-    let newRow = y;
+    // Dibujar el laberinto
+    mazeGrid.forEach((row, rowIndex) => {
+      row.forEach((cell, cellIndex) => {
+        const x = cellIndex * cellSize;
+        const y = rowIndex * cellSize;
 
-    if (direction === Direction.UP) newRow -= 1;
-    else if (direction === Direction.DOWN) newRow += 1;
-    else if (direction === Direction.LEFT) newCol -= 1;
-    else if (direction === Direction.RIGHT) newCol += 1;
+        // Dibujar paredes o espacios
+        ctx.fillStyle = cell ? '#1F2937' : '#F3F4F9'; // Color de las paredes y los caminos
+        ctx.fillRect(x, y, cellSize, cellSize);
 
-    if (
-      newCol >= 0
-      && newCol < gridSize
-      && newRow >= 0
-      && newRow < gridSize
-      && !mazeGrid[newRow][newCol]
-    ) {
-      setPosition({ x: newCol, y: newRow });
-    }
+        // Borde de las celdas
+        ctx.strokeStyle = '#E5E7EB';
+        ctx.strokeRect(x, y, cellSize, cellSize);
+      });
+    });
+
+    // Dibujar al jugador
+    const playerX = position.x * cellSize + cellSize / 2;
+    const playerY = position.y * cellSize + cellSize / 2;
+    ctx.fillStyle = '#4ADE80'; // Color del jugador
+    ctx.beginPath();
+    ctx.arc(playerX, playerY, cellSize / 3, 0, Math.PI * 2);
+    ctx.fill();
   };
 
   const { red, green, blue } = useSettings();
@@ -126,23 +139,58 @@ function Maze() {
     y: number
     width: number
     height: number
+    direction: Direction
   }) => {
-    const { ctx } = createBottonProps;
+    const {
+      ctx, x, y, width, height, direction,
+    } = createBottonProps;
 
-    ctx.strokeStyle = 'black'; // Borde negro
-    ctx.lineWidth = 2; // Grosor del borde
-    ctx.fillStyle = 'rgba(180, 180, 180, 0.4)'; // Fondo blanco transparente
+    // Button background
+    ctx.strokeStyle = 'black'; // Black border
+    ctx.lineWidth = 2; // Border thickness
+    ctx.fillStyle = 'rgba(180, 180, 180, 0.4)'; // Transparent white background
 
+    // Draw rounded rectangle
     ctx.beginPath();
-    ctx.roundRect(
-      createBottonProps.x,
-      createBottonProps.y,
-      createBottonProps.width,
-      createBottonProps.height,
-      10,
-    );
-    ctx.fill(); // Rellena el fondo transparente
-    ctx.stroke(); // Dibuja el borde
+    ctx.roundRect(x, y, width, height, 10);
+    ctx.fill(); // Fill transparent background
+    ctx.stroke(); // Draw border
+
+    // Draw arrow
+    ctx.fillStyle = 'black'; // Arrow color
+    ctx.beginPath();
+
+    // Calculate arrow coordinates based on direction
+    const centerX = x + width / 2;
+    const centerY = y + height / 2;
+
+    switch (direction) {
+      case Direction.UP:
+        ctx.moveTo(centerX, centerY - 20);
+        ctx.lineTo(centerX - 15, centerY + 10);
+        ctx.lineTo(centerX + 15, centerY + 10);
+        break;
+      case Direction.DOWN:
+        ctx.moveTo(centerX, centerY + 20);
+        ctx.lineTo(centerX - 15, centerY - 10);
+        ctx.lineTo(centerX + 15, centerY - 10);
+        break;
+      case Direction.LEFT:
+        ctx.moveTo(centerX - 20, centerY);
+        ctx.lineTo(centerX + 10, centerY - 15);
+        ctx.lineTo(centerX + 10, centerY + 15);
+        break;
+      case Direction.RIGHT:
+        ctx.moveTo(centerX + 20, centerY);
+        ctx.lineTo(centerX - 10, centerY - 15);
+        ctx.lineTo(centerX - 10, centerY + 15);
+        break;
+      default:
+        break;
+    }
+
+    ctx.closePath();
+    ctx.fill();
   };
 
   const createBottons = () => {
@@ -184,8 +232,6 @@ function Maze() {
       ctx.lineWidth = 2;
       ctx.stroke();
 
-      lastPositionRef.current = { x: centerX, y: centerY };
-
       const matchDirection = SIZES_BOXES.find((s) => (
         s.x <= centerX
         && centerX <= s.x + s.width
@@ -193,27 +239,48 @@ function Maze() {
         && centerY <= s.y + s.height
       ));
 
-      if (matchDirection && lastMove.current !== matchDirection.direction) {
-        movePlayer(matchDirection.direction);
-        if (matchDirection.direction === Direction.UP) {
-          console.log('UP');
+      // Nueva lógica de movimiento con setState callback
+      setLastMove((prevLastMove) => {
+        if (matchDirection) {
+          if (prevLastMove !== matchDirection.direction) {
+            // Si no es el mismo movimiento que el último, realiza el movimiento
+            setPosition((prevPosition) => {
+              const { x, y } = prevPosition;
+              let newCol = x;
+              let newRow = y;
+
+              if (matchDirection.direction === Direction.UP) newRow -= 1;
+              else if (matchDirection.direction === Direction.DOWN) newRow += 1;
+              else if (matchDirection.direction === Direction.LEFT) newCol -= 1;
+              else if (matchDirection.direction === Direction.RIGHT) newCol += 1;
+
+              if (
+                newCol >= 0
+                && newCol < gridSizeX
+                && newRow >= 0
+                && newRow < gridSizeY
+                && !mazeGrid[newRow][newCol]
+              ) {
+                return { x: newCol, y: newRow };
+              }
+              return prevPosition;
+            });
+
+            // Devuelve la nueva dirección
+            return matchDirection.direction;
+          }
+          // Si es el mismo movimiento, mantén el estado actual
+          return prevLastMove;
         }
-        if (matchDirection.direction === Direction.DOWN) {
-          console.log('DOWN');
-        }
-        if (matchDirection.direction === Direction.LEFT) {
-          console.log('LEFT');
-        }
-        if (matchDirection.direction === Direction.RIGHT) {
-          console.log('RIGHT');
-        }
-        lastMove.current = matchDirection.direction;
-      }
-      if (!matchDirection && lastMove.current !== Direction.NULL) {
-        lastMove.current = Direction.NULL;
-      }
+        // Si no está en ningún botón, resetea a NULL
+        return prevLastMove !== Direction.NULL ? Direction.NULL : prevLastMove;
+      });
     }
   };
+
+  useEffect(() => {
+    drawMaze();
+  }, [position, mazeGrid]);
 
   // Configuración de la cámara y dibujo en canvas
   useEffect(() => {
@@ -230,7 +297,8 @@ function Maze() {
             const ctx = canvasRef.current.getContext('2d');
 
             if (ctx) {
-              setInterval(() => {
+              // Usar requestAnimationFrame en lugar de setInterval
+              const processFrame = () => {
                 ctx.clearRect(0, 0, canvasRef.current!.width, canvasRef.current!.height);
                 ctx.save();
                 ctx.scale(-1, 1); // Efecto espejo
@@ -244,7 +312,13 @@ function Maze() {
                 );
                 ctx.restore();
                 detectColor(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
-              }, 300);
+
+                // Solicitar el próximo frame de animación
+                requestAnimationFrame(processFrame);
+              };
+
+              // Iniciar el procesamiento de frames
+              requestAnimationFrame(processFrame);
             }
           }
         }
@@ -265,13 +339,13 @@ function Maze() {
 
   // Gana el juego si llega al objetivo
   useEffect(() => {
-    if (position.x === 6 && position.y === 0) {
+    if (position.x === gridSizeX - 1 && position.y === 0) {
       setShowModal(true);
     }
   }, [position]);
 
   return (
-    <div className="min-h-screen p-4 bg-gray-900 text-white">
+    <div className="min-h-screen p-4 bg-gray-900 text-white w-full flex flex-col items-center">
       <button
         onClick={() => navigate('/game-options')}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
@@ -280,57 +354,27 @@ function Maze() {
         <ArrowLeft className="h-8 w-8" />
       </button>
 
-      <div className="absolute top-4 left-40 ">
-        <button type="button" onClick={() => movePlayer(Direction.UP)}>
-          UP
-        </button>
-        <button type="button" onClick={() => movePlayer(Direction.DOWN)}>
-          DOWN
-        </button>
-        <button type="button" onClick={() => movePlayer(Direction.LEFT)}>
-          LEFT
-        </button>
-        <button type="button" onClick={() => movePlayer(Direction.RIGHT)}>
-          RIGHT
-        </button>
-      </div>
-
       <div className="text-center">
         <h1 className="text-4xl font-bold mb-8">Maze</h1>
       </div>
 
-      <div className="flex flex-col md:flex-row w-[100%]">
-        <div className="mx-auto w-[100%] md:w-[40%] h-auto bg-slate-50 p-3 flex flex-col justify-center items-center rounded-md">
-          <div className="w-[70%] md:w-[90%] h-auto grid grid-cols-7 gap-2 justify-center items-center rounded-sm">
-            {mazeGrid.map((row, rowIndex) => row.map((cell, cellIndex) => {
-              const isPlayer = position.y === rowIndex && position.x === cellIndex;
+      <div className="grid lg:grid-cols-2 w-full max-w-4xl gap-10">
+        <canvas
+          ref={mazeRef}
+          width={gridSizeX * cellSize}
+          height={gridSizeY * cellSize}
+          className="border-2 border-gray-500 w-full"
+        />
 
-              return (
-                <div
-                  key={`${rowIndex},${cellIndex}`}
-                  className={`w/7 h-16 flex justify-center items-center rounded-sm shadow-md ${cell ? 'bg-' : 'bg-white'}`}
-                  style={{
-                    backgroundColor: isPlayer ? '#4ADE80' : cell ? '#1F2937' : '#F3F4F9',
-                  }}
-                >
-                  {isPlayer && <div className="grid center w-1/2 h-1/2 rounded-full bg-blue-500" />}
-                </div>
-              );
-            }))}
-          </div>
-        </div>
-
-        <div className="flex justify-center flex-row w-full md:w-1/2 md:flex-col">
-          <div className="flex justify-center mt-2 relative">
-            <video ref={videoRef} className="hidden" autoPlay playsInline />
-            <canvas ref={canvasRef} width="600" height="500" className="border-2 border-gray-500 rounded-lg" />
-            <canvas
-              ref={drawingCanvasRef}
-              className="absolute top-0 left-0 w-full h-full"
-              width="600"
-              height="500"
-            />
-          </div>
+        <div className="w-full relative">
+          <video ref={videoRef} className="hidden" autoPlay playsInline />
+          <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} className="border-2 border-gray-500 rounded-lg w-full" />
+          <canvas
+            ref={drawingCanvasRef}
+            className="absolute top-0 left-0 w-full"
+            width="600"
+            height="500"
+          />
         </div>
       </div>
 
