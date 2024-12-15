@@ -272,14 +272,8 @@ function Maze() {
       </div>
 
       <div className="flex flex-col md:flex-row w-[100%]">
-        <div
-          className="mx-auto w-[100%] md:w-[40%] h-auto bg-slate-50 p-3 flex flex-col
-      justify-center items-center
-      rounded-md"
-        >
-          <div
-            className="w-[70%] md:w-[90%] h-auto grid grid-cols-7 gap-2 justify-center items-center rounded-sm"
-          >
+        <div className="mx-auto w-[100%] md:w-[40%] h-auto bg-slate-50 p-3 flex flex-col justify-center items-center rounded-md">
+          <div className="w-[70%] md:w-[90%] h-auto grid grid-cols-7 gap-2 justify-center items-center rounded-sm">
             {mazeGrid.map((row, rowIndex) =>
               row.map((cell, cellIndex) => {
                 const isPlayer = position.y === rowIndex && position.x === cellIndex;
@@ -287,67 +281,26 @@ function Maze() {
                 return (
                   <div
                     key={`${rowIndex},${cellIndex}`}
-                    className={`w/7 h-16 flex justify-center items-center
-                   rounded-sm shadow-md
-                   ${cell ? "bg-" : "bg-white"}`}
+                    className={`w/7 h-16 flex justify-center items-center rounded-sm shadow-md ${cell ? "bg-" : "bg-white"}`}
                     style={{
                       backgroundColor: isPlayer ? "#4ADE80" : cell ? "#1F2937" : "#F3F4F9",
                     }}
                   >
-                    {isPlayer && (
-                      <div
-                        className="grid center w-1/2 h-1/2 rounded-full bg-blue-500"
-                      />
-                    )}
+                    {isPlayer && <div className="grid center w-1/2 h-1/2 rounded-full bg-blue-500" />}
                   </div>
                 );
               })
             )}
           </div>
-
-          <div className="flex flex-col justify-center items-center gap-1 mt-4">
-            <button onClick={() => movePlayer("up")} className="p-2 bg-blue-700 text-white rounded-md">
-              <ArrowUp />
-            </button>
-            <div className="flex space-x-2">
-              <button onClick={() => movePlayer("left")} className="
-              p-2 bg-blue-700 text-white rounded-md">
-                <ArrowLeft />
-              </button>
-              <button onClick={() => movePlayer("down")} className="p-2 bg-blue-700 text-white rounded-md">
-                <ArrowDown />
-              </button>
-              <button onClick={() => movePlayer("right")} className="p-2 bg-blue-700 text-white rounded-md">
-                <ArrowRight />
-              </button>
-            </div>
-          </div>
         </div>
+
         <div className="flex justify-center flex-row w-full md:w-1/2 md:flex-col">
-          {/* Cámara y Canvas */}
           <div className="flex justify-center mt-2">
             <video ref={videoRef} className="hidden" autoPlay playsInline />
-            <canvas
-              ref={canvasRef}
-              width="300"
-              height="200"
-              className="border-2 border-gray-500 rounded-lg"
-            ></canvas>
-          </div>
-          <div className="text-center">
-            <button
-              onClick={() => {
-                setPosition(initialPosition);
-                setShowModal(false);
-              }}
-              className="mt-4 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Try Again
-            </button>
+            <canvas ref={canvasRef} width="600" height="500" className="border-2 border-gray-500 rounded-lg"></canvas>
           </div>
         </div>
       </div>
-
 
       <Modal
         title="Congratulations!"
