@@ -20,6 +20,7 @@ function HandExercise1() {
   const [showText, setShowText] = useState(true);
 
   const { red, green, blue } = useSettings();
+  const [showLines, setShowLines] = useState(false);
 
   useEffect(() => {
     const getCamera = async () => {
@@ -134,6 +135,30 @@ function HandExercise1() {
     }
   };
 
+  const handleStep1Click = () => {
+    setShowLines(true);
+
+    // Dibujar las líneas
+    const canvas = drawingCanvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Limpiar canvas
+        ctx.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Color rojo semitransparente
+
+        // Dibujar la primera línea
+        ctx.fillRect(50, 200, CANVAS_WIDTH - 100, 20); // X, Y, ancho, alto
+
+        // Dibujar la segunda línea
+        ctx.fillRect(50, 400, CANVAS_WIDTH - 100, 20); // X, Y, ancho, alto
+      }
+    }
+
+    // Ocultar las líneas después de 3 segundos
+    setTimeout(() => setShowLines(false), 3000);
+  };
+
+
   // Dibuja los frames del video en el canvas y detecta el color
   useEffect(() => {
     const processFrame = () => {
@@ -181,7 +206,7 @@ function HandExercise1() {
         <div className="bg-gray-700 w-1/4 h-[36rem] rounded-lg shadow-lg p-6 flex flex-col">
           <h2 className="text-gray-100 font-bold text-3xl text-center mb-5">P A S O S</h2>
           <div className="grid grid-rows-3 gap-5 flex-grow">
-            <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
+            <div onClick={handleStep1Click} className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
               <img src={HandStep1} alt="Paso 1" className="w-full h-full object-cover" />
             </div>
             <div className="bg-gray-700 rounded-lg overflow-hidden flex items-center justify-center text-white text-center font-bold text-lg transition-all cursor-pointer hover:brightness-75 hover:scale-95 transform duration-300">
@@ -209,6 +234,7 @@ function HandExercise1() {
             autoPlay
             playsInline
           />
+
           <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} style={{ display: 'none' }} />
 
           <canvas
