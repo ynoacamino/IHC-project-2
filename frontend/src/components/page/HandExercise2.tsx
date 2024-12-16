@@ -1,17 +1,25 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Settings } from 'lucide-react';
+import { useSettings } from './SettingsContext';
 
 import HandStep1 from '../../assets/images/hand_ex2_step1.png';
 import HandStep2 from '../../assets/images/hand_ex2_step2.png';
 import HandStep3 from '../../assets/images/hand_ex2_step3.png';
 
+const CANVAS_WIDTH = 800;
+const CANVAS_HEIGHT = 600;
+
 function HandExercise2() {
   const navigate = useNavigate();
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const drawingCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const [text, setText] = useState('¡Ejercicio 2!');
   const [showText, setShowText] = useState(true);
+
+  const { red, green, blue } = useSettings();
 
   useEffect(() => {
     const getCamera = async () => {
@@ -35,6 +43,103 @@ function HandExercise2() {
         tracks.forEach((track) => track.stop());
       }
     };
+  }, []);
+
+  const detectColor = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+    const frame = ctx.getImageData(0, 0, width, height);
+    const { data } = frame;
+    const detectedPixels: { x: number; y: number }[] = [];
+
+    for (let i = 0; i < data.length; i += 4) {
+      const r = data[i];
+      const g = data[i + 1];
+      const b = data[i + 2];
+
+      // Comparar el color con los valores de SettingsContext
+      if (Math.abs(r - red) < 30 && Math.abs(g - green) < 30 && Math.abs(b - blue) < 30) {
+        const x = (i / 4) % width;
+        const y = Math.floor((i / 4) / width);
+        detectedPixels.push({ x, y });
+      }
+    }
+
+    if (detectedPixels.length > 0) { // Solo dibujar si isDrawing es true
+      // Dividir los píxeles detectados en dos grupos
+      const midpoint = Math.floor(detectedPixels.length / 2);
+      const group1 = detectedPixels.slice(0, midpoint);
+      const group2 = detectedPixels.slice(midpoint);
+
+      // Función para calcular el centro de un grupo de píxeles
+      const calculateCenter = (group: { x: number; y: number }[]) => {
+        const centerX = group.reduce((sum, pixel) => sum + pixel.x, 0) / group.length;
+        const centerY = group.reduce((sum, pixel) => sum + pixel.y, 0) / group.length;
+        return { centerX, centerY };
+      };
+
+      // Calcular los centros de los dos grupos
+      const center1 = calculateCenter(group1);
+      const center2 = calculateCenter(group2);
+
+      // Calcular los radios de los círculos basados en el área de cada grupo
+      const radius1 = Math.sqrt(group1.length / Math.PI) * 1.3;
+      const radius2 = Math.sqrt(group2.length / Math.PI) * 1.3;
+
+      // Ajustar los centros para que los círculos no se salgan del canvas
+      const adjustedCenter1X = Math.min(center1.centerX, CANVAS_WIDTH - radius1);
+      const adjustedCenter1Y = Math.min(center1.centerY, CANVAS_HEIGHT - radius1);
+      const adjustedCenter2X = Math.min(center2.centerX, CANVAS_WIDTH - radius2);
+      const adjustedCenter2Y = Math.min(center2.centerY, CANVAS_HEIGHT - radius2);
+
+      // Dibujar los círculos en el canvas de dibujo
+      const drawingCtx = drawingCanvasRef.current?.getContext('2d');
+      if (drawingCtx) {
+        drawingCtx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT); // Limpiar el canvas
+
+        // Primer círculo
+        drawingCtx.beginPath();
+        drawingCtx.arc(adjustedCenter1X, adjustedCenter1Y, radius1, 0, Math.PI * 2);
+        drawingCtx.strokeStyle = 'red'; // Color del círculo
+        drawingCtx.lineWidth = 3;
+        drawingCtx.stroke();
+
+        // Segundo círculo
+        drawingCtx.beginPath();
+        drawingCtx.arc(adjustedCenter2X, adjustedCenter2Y, radius2, 0, Math.PI * 2);
+        drawingCtx.strokeStyle = 'blue'; // Color del círculo
+        drawingCtx.lineWidth = 3;
+        drawingCtx.stroke();
+      }
+    }
+  };
+
+  // Dibuja los frames del video en el canvas y detecta el color
+  useEffect(() => {
+    const processFrame = () => {
+      const video = videoRef.current;
+      const canvas = canvasRef.current;
+      const drawingCanvas = drawingCanvasRef.current;
+      if (video && canvas && drawingCanvas) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el canvas
+
+          // Dibuja el video en el canvas (efecto espejo)
+          ctx.save();
+          ctx.scale(-1, 1); // Efecto espejo
+          ctx.translate(-canvas.width, 0);
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          ctx.restore();
+
+          // Detectar color y dibujar círculo
+          detectColor(ctx, CANVAS_WIDTH, CANVAS_HEIGHT);
+
+          // Solicitar el próximo frame
+          requestAnimationFrame(processFrame);
+        }
+      }
+    };
+
+    requestAnimationFrame(processFrame);
   }, []);
 
   useEffect(() => {
@@ -97,6 +202,17 @@ function HandExercise2() {
             autoPlay
             playsInline
           />
+
+          <canvas ref={canvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} style={{ display: 'none' }} />
+
+          <canvas
+            ref={drawingCanvasRef}
+            width={CANVAS_WIDTH}
+            height={CANVAS_HEIGHT}
+            className="absolute top-0 left-0"
+            style={{ pointerEvents: 'none' }}
+          />
+
           {text && (
             <div className="absolute top-0 left-0 right-0 bottom-0 flex flex-col items-center justify-center bg-black bg-opacity-50 p-4">
               <h1

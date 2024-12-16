@@ -129,7 +129,7 @@ function Settings() {
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <button
         type="button"
-        onClick={() => navigate('/')}
+        onClick={() => navigate(-1)}
         className="absolute top-4 left-4 text-white hover:text-purple-400 transition-colors"
       >
         <ArrowLeft className="h-8 w-8" />
