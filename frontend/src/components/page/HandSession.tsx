@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, FastForward, Settings } from 'lucide-react';  // Asegúrate de importar el ícono de lápiz
+import { ArrowLeft, FastForward, Settings } from 'lucide-react';
 import { useSettings } from './SettingsContext';
 
 const CANVAS_WIDTH = 1000;
