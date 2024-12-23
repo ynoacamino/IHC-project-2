@@ -85,7 +85,7 @@ function ExerciseCamera({
 
             // Dibujar el punto detectado
             ctx.beginPath();
-            ctx.arc(centerX, centerY, 15, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY, 25, 0, Math.PI * 2);
             ctx.fillStyle = 'rgba(255, 0, 0, 0.5)';
             ctx.fill();
 

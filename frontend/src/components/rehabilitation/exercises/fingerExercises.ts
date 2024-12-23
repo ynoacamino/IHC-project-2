@@ -5,7 +5,7 @@ export const fingerExercises: Exercise[] = [
         id: 'finger-tap',
         name: 'Tapping Individual',
         description: 'Ejercicio de precisión para cada dedo',
-        duration: 90,
+        duration: 300,
         difficulty: 'Fácil',
         targetAreas: ['Dedos', 'Coordinación'],
         instructions: [

@@ -1,15 +1,35 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { useSettings } from '../../../contexts/SettingsContext';
 import ExerciseCamera from './ExerciseCamera';
 import ExerciseTimer from './ExerciseTimer';
 import ExerciseInstructions from './ExerciseInstructions';
+import { HandPath } from './HandPath';
+import { StepImages } from './StepImages';
 import { handExercises } from './handExercises';
 import type { ExerciseProgress } from './types';
 
+import hand1 from '../../../assets/images/hand1.png';
+import hand2 from '../../../assets/images/hand2.png';
+import hand3 from '../../../assets/images/hand3.png';
+
 const CANVAS_WIDTH = 640;
 const CANVAS_HEIGHT = 480;
+
+const stepImages = [
+    {
+        src: hand1,
+        alt: 'Paso 1'
+    },
+    {
+        src: hand2,
+        alt: 'Paso 2'
+    },
+    {
+        src: hand3,
+        alt: 'Paso 3'
+    }
+];
 
 function HandExerciseSession() {
     const navigate = useNavigate();
@@ -23,9 +43,18 @@ function HandExerciseSession() {
     const [currentStep, setCurrentStep] = useState(0);
 
     const handleColorDetected = useCallback((x: number, y: number) => {
-        // Implementar lógica de detección específica para ejercicios de mano
-        console.log('Color detected at:', x, y);
-    }, []);
+        if (!isActive) return;
+        
+
+        const isOnPath = y >= 220 && y <= 260; // hay algo de tolerancia vertical
+        
+        if (isOnPath) {
+        setProgress(prev => ({
+            ...prev,
+            score: prev.score + 1
+        }));
+        }
+    }, [isActive]);
 
     const handleTimeUpdate = useCallback((newTime: number) => {
         setProgress(prev => ({ ...prev, timeLeft: newTime }));
@@ -90,12 +119,19 @@ function HandExerciseSession() {
                 </div>
             </div>
 
-            <ExerciseCamera
-                onColorDetected={handleColorDetected}
-                zones={[]}
-                width={CANVAS_WIDTH}
-                height={CANVAS_HEIGHT}
-            />
+            <div className="relative">
+                <ExerciseCamera
+                    onColorDetected={handleColorDetected}
+                    zones={[]}
+                    width={CANVAS_WIDTH}
+                    height={CANVAS_HEIGHT}
+                />
+                <HandPath isActive={isActive} />
+                <div className="relative mt-4 ml-20">
+                    <p className="text-2xl font-semibold mb-4">Pasos:</p>
+                    <StepImages images={stepImages} />
+                </div>
+            </div>
             </div>
         </div>
         </div>

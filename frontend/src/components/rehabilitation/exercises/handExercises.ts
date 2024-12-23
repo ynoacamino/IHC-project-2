@@ -5,7 +5,7 @@ export const handExercises: Exercise[] = [
         id: 'hand-flex',
         name: 'Flexión y Extensión',
         description: 'Ejercicio para mejorar la movilidad general de la mano',
-        duration: 120,
+        duration: 135,
         difficulty: 'Fácil',
         targetAreas: ['Palma', 'Dedos', 'Muñeca'],
         instructions: [
