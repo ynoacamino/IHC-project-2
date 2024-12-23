@@ -22,12 +22,6 @@ function GameOptions() {
       description: 'Realiza el laberinto sin chocar con las paredes',
       route: '/laberinto',
     },
-    {
-      title: 'Rehabilitación',
-      image: 'https://img.freepik.com/vector-gratis/ilustracion-concepto-preparacion-parto_114360-16571.jpg',
-      description: 'Realiza ejercicios de rehabilitación',
-      route: '/rehabilitation',
-    },
   ];
 
   return (
@@ -44,7 +38,7 @@ function GameOptions() {
         <h1 className="text-4xl font-bold text-white mb-8">Choose Your Adventure</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl">
         {games.map((game, index) => (
           <div
             key={index}
