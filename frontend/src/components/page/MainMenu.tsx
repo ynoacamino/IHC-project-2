@@ -10,7 +10,7 @@ function MainMenu() {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-5xl font-bold text-white mb-8 animate-pulse">
-            Active Hand
+            Mano Activa
           </h1>
         </div>
 
