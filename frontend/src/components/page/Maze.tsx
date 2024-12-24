@@ -358,7 +358,7 @@ function Maze() {
         <h1 className="text-4xl font-bold mb-8">Maze</h1>
       </div>
 
-      <div className="grid lg:grid-cols-2 w-full max-w-4xl gap-10">
+      <div className="grid lg:grid-cols-2 w-full max-w-7xl gap-10">
         <canvas
           ref={mazeRef}
           width={gridSizeX * cellSize}

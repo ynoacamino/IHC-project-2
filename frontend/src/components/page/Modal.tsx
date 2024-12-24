@@ -25,7 +25,7 @@ function Modal({
         </button>
 
         {/* Título */}
-        <h2 className="text-2xl font-semibold mb-4 text-center">{title}</h2>
+        <h2 className="text-4xl font-semibold mb-4 text-center text-black">{title}</h2>
 
         {/* Contenido */}
         <div className="modal-content">{children}</div>
